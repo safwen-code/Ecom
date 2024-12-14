@@ -25,7 +25,7 @@ const Navbar = () => {
     setAnchorElUser(null)
   }
 
-  const userInfo = { name: 'safwen' }
+  const userInfo = ''
 
   const isCartFull = 10
 

@@ -3,10 +3,10 @@ import { Box, Button, Divider, Grid, Typography } from '@mui/material'
 
 import Loader from '../layout/Loader'
 import Message from '../layout/Message'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 // import ProductCarousel from './ProductCarousel'
 // import Metas from '../Layout/Metas'
-import { products, users } from '../utils/data'
+import { products } from '../utils/data'
 import Product from './Product'
 
 const ListProducts = () => {
@@ -57,7 +57,7 @@ const ListProducts = () => {
           {' '}
           <Grid container spacing={4} alignItems="stretch">
             {productList.map((product, index) => (
-              <React.Fragment key={product.id}>
+              <React.Fragment key={product._id}>
                 <Product product={product} />
                 {index % 4 === 3 && index !== products.length - 1 && (
                   <Grid item xs={12}>

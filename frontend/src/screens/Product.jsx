@@ -26,7 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }))
 
 const Product = ({ product }) => {
-  //   console.log(product)
+  console.log(product)
   return (
     <Grid item xs={12} sm={6} md={4} lg={3}>
       <Item>
@@ -39,7 +39,7 @@ const Product = ({ product }) => {
           }}
         >
           <Link
-            // to={`/product/${product.id}`}
+            to={`/product/${product._id}`}
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
             <CardMedia
