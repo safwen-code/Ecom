@@ -30,60 +30,6 @@ import { orders } from '../utils/data'
 const OrderScreen = () => {
   const { id } = useParams()
 
-  //   const orderDetails = useSelector((state) => state.orderDetails)
-  //   const { order, loading, error } = orderDetails
-
-  //   const dispatch = useDispatch()
-  //   const [sdkReady, setsdkReady] = useState(false)
-
-  //   const orderPay = useSelector((state) => state.orderPay)
-  //   const { loading: loadingPay, success: successPay } = orderPay
-
-  //   const orderDeliver = useSelector((state) => state.orderDeliver)
-  //   const { loading: loadingdeliver, success: successdeliver } = orderDeliver
-
-  //   const userLogin = useSelector((state) => state.userLogin)
-  //   const { userInfo } = userLogin
-
-  //   const navigate = useNavigate()
-  //   useEffect(() => {
-  //     if (!userInfo) {
-  //       navigate('/login')
-  //     }
-  //     const addPayPalScript = async () => {
-  //       try {
-  //         const { data: clientId } = await axios.get('/api/config/paypal')
-  //         console.log('Client ID:', clientId)
-  //         const script = document.createElement('script')
-  //         script.type = 'text/javascript'
-  //         script.src = `https://sandbox.paypal.com/sdk/js?client-id=${clientId}`
-  //         script.async = true
-  //         script.onload = () => {
-  //           setsdkReady(true)
-  //           console.log('PayPal SDK Loaded')
-  //         }
-  //         script.onerror = () => {
-  //           console.error('PayPal SDK failed to load')
-  //         }
-  //         document.body.appendChild(script)
-  //       } catch (error) {
-  //         console.error('Error loading PayPal SDK:', error)
-  //       }
-  //     }
-  //     if (!order || successPay || successdeliver) {
-  //       dispatch({ type: ORDER_PAY_RESET })
-  //       dispatch({ type: ORDER_DELIVER_RESET })
-
-  //       dispatch(getOrderDetails(id))
-  //     } else if (!order.isPaid) {
-  //       if (!window.paypal) {
-  //         addPayPalScript()
-  //       } else {
-  //         setsdkReady(true)
-  //       }
-  //     }
-  //   }, [dispatch, id, successPay, order, successdeliver, userInfo, navigate])
-
   const successHandler = (paymentResult) => {
     console.log(paymentResult)
   }
