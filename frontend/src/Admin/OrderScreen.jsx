@@ -170,7 +170,7 @@ const OrderScreen = () => {
               </Card>
 
               {/* Order Items */}
-              {/* <Card>
+              <Card>
                 <CardContent>
                   <Typography variant="h5" gutterBottom>
                     Order Items
@@ -211,7 +211,7 @@ const OrderScreen = () => {
                     </List>
                   )}
                 </CardContent>
-              </Card> */}
+              </Card>
             </Grid>
 
             {/* Right Side: Order Summary */}
