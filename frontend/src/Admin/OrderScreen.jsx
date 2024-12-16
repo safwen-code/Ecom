@@ -84,13 +84,12 @@ const OrderScreen = () => {
   //     }
   //   }, [dispatch, id, successPay, order, successdeliver, userInfo, navigate])
 
-  //   const successHandler = (paymentResult) => {
-  //     console.log(paymentResult)
-  //     dispatch(payOrder(id, paymentResult))
-  //   }
-  //   const deliverHandler = () => {
-  //     dispatch(deliverOrder(order))
-  //   }
+  const successHandler = (paymentResult) => {
+    console.log(paymentResult)
+  }
+  const deliverHandler = () => {
+    console.log('delvered')
+  }
 
   const loading = false
   const error = false
@@ -215,7 +214,7 @@ const OrderScreen = () => {
             </Grid>
 
             {/* Right Side: Order Summary */}
-            {/* <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={4}>
               <Card>
                 <CardContent>
                   <Typography variant="h5" gutterBottom>
@@ -243,39 +242,31 @@ const OrderScreen = () => {
                     </ListItem>
                     {!order.isPaid && (
                       <ListItem>
-                        {loadingPay && <Loader />}
-                        {!sdkReady ? (
-                          <Loader />
-                        ) : (
-                          <PayPalButton
-                            amount={order.totalPrice}
-                            onSuccess={successHandler}
-                          />
-                        )}
+                        <PayPalButton
+                          amount={order.totalPrice}
+                          onSuccess={successHandler}
+                        />
                       </ListItem>
                     )}
                   </List>
-                  {loadingdeliver && <Loader />}
-                  {userInfo &&
-                    userInfo.isAdmin &&
-                    order.isPaid &&
-                    !order.isDelivered && (
-                      <List>
-                        <ListItem>
-                          <Button
-                            type="button"
-                            onClick={deliverHandler}
-                            variant="contained"
-                            color="primary"
-                          >
-                            Mark As Delivered
-                          </Button>
-                        </ListItem>
-                      </List>
-                    )}
+                  {/* {loadingdeliver && <Loader />} */}
+                  {order.isPaid && !order.isDelivered && (
+                    <List>
+                      <ListItem>
+                        <Button
+                          type="button"
+                          onClick={deliverHandler}
+                          variant="contained"
+                          color="primary"
+                        >
+                          Mark As Delivered
+                        </Button>
+                      </ListItem>
+                    </List>
+                  )}
                 </CardContent>
               </Card>
-            </Grid> */}
+            </Grid>
           </Grid>
         </>
       )}
