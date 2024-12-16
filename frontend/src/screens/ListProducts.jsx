@@ -1,10 +1,9 @@
 import React from 'react'
-import { Box, Button, Divider, Grid, Typography } from '@mui/material'
+import { Box, Divider, Grid, Typography } from '@mui/material'
 
 import Loader from '../layout/Loader'
 import Message from '../layout/Message'
-import { Link } from 'react-router-dom'
-// import ProductCarousel from './ProductCarousel'
+import ProductCarousel from '../layout/ProductCarousel'
 // import Metas from '../Layout/Metas'
 import { products } from '../utils/data'
 import Product from './Product'
@@ -16,10 +15,11 @@ const ListProducts = () => {
   return (
     <Box sx={{ width: '100%' }} style={{ marginTop: '5px' }}>
       {/* <Metas />
-      <ProductCarousel /> */}
-      <Button component={Link} to="/" variant="contained" color="primary">
+       */}
+      {/* <Button component={Link} to="/" variant="contained" color="primary">
         Go Back
-      </Button>
+      </Button> */}
+      <ProductCarousel />
       <Typography
         variant="h3"
         gutterBottom
