@@ -153,7 +153,7 @@ const OrderScreen = () => {
               </Card>
 
               {/* Payment Method */}
-              {/* <Card sx={{ mb: 2 }}>
+              <Card sx={{ mb: 2 }}>
                 <CardContent>
                   <Typography variant="h5" gutterBottom>
                     Payment Method
@@ -167,7 +167,7 @@ const OrderScreen = () => {
                     <Message variant="error">Not Paid</Message>
                   )}
                 </CardContent>
-              </Card> */}
+              </Card>
 
               {/* Order Items */}
               {/* <Card>
