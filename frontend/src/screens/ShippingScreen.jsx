@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import { TextField, Button, Container, Typography, Grid } from '@mui/material'
 import CheckoutSteps from './CheckoutSteps'
+import { useNavigate } from 'react-router-dom'
 
 const ShippingScreen = () => {
   const shippingAddress = {
@@ -15,9 +16,11 @@ const ShippingScreen = () => {
   const [city, setCity] = useState(shippingAddress.city)
   const [postalCode, setPostalCode] = useState(shippingAddress.postalCode)
   const [country, setCountry] = useState(shippingAddress.country)
+  const navigate = useNavigate()
   const submitHandler = (e) => {
     e.preventDefault()
     //save ship
+    navigate('/payment')
   }
 
   return (
