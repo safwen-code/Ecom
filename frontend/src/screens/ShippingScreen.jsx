@@ -3,15 +3,9 @@ import React, { useState } from 'react'
 import { TextField, Button, Container, Typography, Grid } from '@mui/material'
 import CheckoutSteps from './CheckoutSteps'
 import { useNavigate } from 'react-router-dom'
+import { shippingAddress } from '../utils/data'
 
 const ShippingScreen = () => {
-  const shippingAddress = {
-    address: '123 Main St',
-    city: 'New York',
-    postalCode: '10001',
-    country: 'USA',
-  }
-
   const [address, setAddress] = useState(shippingAddress.address)
   const [city, setCity] = useState(shippingAddress.city)
   const [postalCode, setPostalCode] = useState(shippingAddress.postalCode)
