@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import {
   Box,
   Grid,
@@ -21,7 +21,7 @@ import {
 } from '@mui/material'
 import Loader from '../layout/Loader'
 import Message from '../layout/Message'
-import { products, users } from '../utils/data'
+import { products } from '../utils/data'
 
 const ProductScreen = () => {
   const [qty, setQty] = useState(1)

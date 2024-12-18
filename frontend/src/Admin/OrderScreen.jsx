@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Message from '../layout/Message'
 import Loader from '../layout/Loader'
@@ -13,19 +13,8 @@ import {
   ListItemText,
   Divider,
   Button,
-  Container,
 } from '@mui/material'
-// import {
-//   getOrderDetails,
-//   payOrder,
-//   deliverOrder,
-// } from '../actions/orderActions'
-// import axios from 'axios'
 import { PayPalButton } from 'react-paypal-button-v2'
-// import {
-//   ORDER_PAY_RESET,
-//   ORDER_DELIVER_RESET,
-// } from '../constants/orderConstants'
 import { orders } from '../utils/data'
 const OrderScreen = () => {
   const { id } = useParams()
