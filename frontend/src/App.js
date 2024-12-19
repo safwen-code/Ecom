@@ -11,6 +11,11 @@ import ProductListScreen from './Admin/ProductListScreen'
 import ProductEditeScreen from './Admin/ProductEditScreen'
 import UserListScreen from './Admin/UserListScreen'
 import UserEditScreen from './Admin/UserEditScreen'
+import CartScreen from './screens/CartScreen'
+import ProfileScreen from './Client/ProfileScreen'
+import ShippingScreen from './screens/ShippingScreen'
+import PaymentScreen from './screens/PaymentScreen'
+import PlaceOrderScreen from './screens/PlaceOrderScreen'
 
 const App = () => {
   return (
@@ -19,10 +24,13 @@ const App = () => {
         <Navbar />
         <main>
           <Routes>
+            <Route path="/" element={<ListProducts />} />
+
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<ListProducts />} />
+
             <Route path="/product/:id" element={<ProductScreen />} />
+
             <Route path="/admin/orderlist" element={<OrderListScreen />} />
             <Route path="/order/:id" element={<OrderScreen />} />
             <Route
@@ -36,6 +44,13 @@ const App = () => {
             />
             <Route path="/admin/userlist" element={<UserListScreen />} />
             <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
+
+            <Route path="/cart" element={<CartScreen />} />
+            <Route path="/profile" element={<ProfileScreen />} />
+
+            <Route path="/shipping" element={<ShippingScreen />} />
+            <Route path="/payment" element={<PaymentScreen />} />
+            <Route path="/placeorder" element={<PlaceOrderScreen />} />
           </Routes>
         </main>
       </Router>
