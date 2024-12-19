@@ -5,13 +5,19 @@ import Loader from '../layout/Loader'
 import Message from '../layout/Message'
 import ProductCarousel from '../layout/ProductCarousel'
 // import Metas from '../Layout/Metas'
-import { products } from '../utils/data'
 import Product from './Product'
-
+import { useSelector, useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { diplayProducts } from '../Actions/prdActions'
 const ListProducts = () => {
-  const loading = false
-  const error = false
-  const productList = products && products
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(diplayProducts())
+  }, [dispatch])
+  const productList = useSelector((state) => state.productList)
+  const { loading, error, products } = productList
+  console.log(typeof products)
+
   return (
     <Box sx={{ width: '100%' }} style={{ marginTop: '5px' }}>
       {/* <Metas />
@@ -56,7 +62,7 @@ const ListProducts = () => {
         <div style={{ margin: '20px' }}>
           {' '}
           <Grid container spacing={4} alignItems="stretch">
-            {productList.map((product, index) => (
+            {products.map((product, index) => (
               <React.Fragment key={product._id}>
                 <Product product={product} />
                 {index % 4 === 3 && index !== products.length - 1 && (
