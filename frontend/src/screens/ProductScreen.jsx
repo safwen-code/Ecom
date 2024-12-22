@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import {
   Box,
@@ -26,17 +26,25 @@ import { motion } from 'framer-motion'
 import Loader from '../layout/Loader'
 import Message from '../layout/Message'
 import { products } from '../utils/data'
+import { useDispatch, useSelector } from 'react-redux'
+import { displayProductby } from '../Actions/prdActions'
 
 const ProductScreen = () => {
+  const dispatch = useDispatch()
+
   const [qty, setQty] = useState(1)
   const [rating, setRating] = useState(0)
   const [comment, setComment] = useState('')
   const [wishlist, setWishlist] = useState(false)
 
   let { id } = useParams()
-  const product = products.find((product) => product._id === id)
-  const loading = false
-  const error = false
+  useEffect(() => {
+    if (id) {
+      dispatch(displayProductby(id))
+    }
+  }, [id, dispatch])
+  const productID = useSelector((state) => state.productID)
+  const { loading, error, product } = productID
 
   const addToCartHandler = () => {
     console.log('Added to cart')
