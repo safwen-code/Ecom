@@ -3,12 +3,13 @@ import { thunk } from 'redux-thunk'
 import { composeWithDevTools } from '@redux-devtools/extension'
 
 //import reducers
-import { prdListReducer } from './Reducers/prdReducers'
+import { prdDetailsReducer, prdListReducer } from './Reducers/prdReducers'
 
 //create Reducers
 const reducer = combineReducers({
   //add reducers here exp
   productList: prdListReducer,
+  productID: prdDetailsReducer,
 })
 
 //create some storage data
