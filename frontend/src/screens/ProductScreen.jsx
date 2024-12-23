@@ -25,7 +25,6 @@ import FavoriteIcon from '@mui/icons-material/Favorite'
 import { motion } from 'framer-motion'
 import Loader from '../layout/Loader'
 import Message from '../layout/Message'
-import { products } from '../utils/data'
 import { useDispatch, useSelector } from 'react-redux'
 import { displayProductby } from '../Actions/prdActions'
 

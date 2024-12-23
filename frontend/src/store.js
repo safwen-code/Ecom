@@ -14,11 +14,16 @@ const reducer = combineReducers({
   cltLogin: loginReducer,
 })
 
-//create some storage data
+//get some storage data
+
+const userLoginfromstorage = localStorage.getItem('userInfo')
+  ? JSON.parse(localStorage.getItem('userInfo'))
+  : null
 
 //create initialState
 const initialState = {
   //add initial state here exp
+  cltLogin: { userInfo: userLoginfromstorage },
 }
 
 //create middel

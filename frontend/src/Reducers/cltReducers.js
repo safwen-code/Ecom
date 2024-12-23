@@ -5,14 +5,14 @@ import {
 } from '../Constants/cltConstants'
 
 export const loginReducer = async (state = {}, action) => {
-  const { type, payload } = action
+  const { type } = action
   switch (type) {
     case USER_LOGIN_REQUEST:
       return { loading: false, ...state }
     case USER_LOGIN_SUCCESS:
-      return { loading: false, userInfo: payload }
+      return { loading: false, userInfo: action.payload }
     case USER_LOGIN_FAIL:
-      return { loading: false, error: payload }
+      return { loading: false, error: action.payload }
     default:
       return state
   }
