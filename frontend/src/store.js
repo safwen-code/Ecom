@@ -4,7 +4,7 @@ import { composeWithDevTools } from '@redux-devtools/extension'
 
 //import reducers
 import { prdDetailsReducer, prdListReducer } from './Reducers/prdReducers'
-import { loginReducer } from './Reducers/cltReducers'
+import { loginReducer, registerReducer } from './Reducers/cltReducers'
 
 //create Reducers
 const reducer = combineReducers({
@@ -12,6 +12,7 @@ const reducer = combineReducers({
   productList: prdListReducer,
   productID: prdDetailsReducer,
   cltLogin: loginReducer,
+  cltRegister: registerReducer,
 })
 
 //get some storage data
