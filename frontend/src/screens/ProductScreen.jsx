@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import {
   Box,
   Grid,
@@ -42,11 +42,14 @@ const ProductScreen = () => {
       dispatch(displayProductby(id))
     }
   }, [id, dispatch])
+
   const productID = useSelector((state) => state.productID)
   const { loading, error, product } = productID
 
+  const navigate = useNavigate()
+
   const addToCartHandler = () => {
-    console.log('Added to cart')
+    navigate(`/cart/${id}?qty=${qty}`)
   }
 
   const toggleWishlist = () => {

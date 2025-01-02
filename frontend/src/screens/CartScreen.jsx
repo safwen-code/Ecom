@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import {
@@ -18,37 +18,31 @@ import {
   CardContent,
   Button,
 } from '@mui/material'
-import { Link } from 'react-router-dom'
+
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useLocation, useParams } from 'react-router-dom'
+import { AddToCart, removeFromCart } from '../Actions/cartaction'
 
 const CartScreen = () => {
-  const removeFromCartHandler = (id) => {}
+  const { id } = useParams()
+  const location = useLocation()
+  const dispatch = useDispatch()
+
+  const qty = location.search ? Number(location.search.split('=')[1]) : 1
+
+  useEffect(() => {
+    if (id) {
+      dispatch(AddToCart(id, qty))
+    }
+  }, [id, dispatch, qty])
+
+  const removeFromCartHandler = (id) => {
+    console.log(id)
+    dispatch(removeFromCart(id))
+  }
   const checkoutHandler = () => {}
-  const cartItems = [
-    {
-      product: '1',
-      name: 'Apple iPhone 13 Pro',
-      image: 'https://example.com/images/iphone13pro.jpg',
-      price: 999.99,
-      qty: 1,
-      countInStock: 5,
-    },
-    {
-      product: '2',
-      name: 'Samsung Galaxy S21',
-      image: 'https://example.com/images/galaxys21.jpg',
-      price: 799.99,
-      qty: 2,
-      countInStock: 3,
-    },
-    {
-      product: '3',
-      name: 'Sony WH-1000XM4 Headphones',
-      image: 'https://example.com/images/sony-headphones.jpg',
-      price: 349.99,
-      qty: 1,
-      countInStock: 10,
-    },
-  ]
+
+  const { cartItems } = useSelector((state) => state.cart)
 
   return (
     <Box
@@ -63,6 +57,7 @@ const CartScreen = () => {
       <Typography variant="h5" sx={{ mb: 2 }}>
         Shopping Cart
       </Typography>
+
       {cartItems.length === 0 ? (
         <Box>
           <Typography variant="body1">
@@ -150,16 +145,27 @@ const CartScreen = () => {
                             },
                           }}
                         >
-                          <Select value={item.qty}>
+                          <Select
+                            value={item.qty}
+                            onChange={(e) => {
+                              dispatch(
+                                AddToCart(item.product, Number(e.target.value)),
+                                console.log(item.product),
+                              )
+                            }}
+                          >
                             {[...Array(item.countInStock).keys()].map((x) => (
-                              <MenuItem key={x + 1} value={x + 1}>
+                              <MenuItem
+                                key={`${item.product}-${x + 1}`}
+                                value={x + 1}
+                              >
                                 {x + 1}
                               </MenuItem>
                             ))}
                           </Select>
                         </FormControl>
                         <IconButton
-                          onClick={() => removeFromCartHandler(item.product)}
+                          onClick={() => removeFromCartHandler(item._id)}
                           sx={{ color: 'red' }}
                         >
                           <DeleteOutlineIcon />

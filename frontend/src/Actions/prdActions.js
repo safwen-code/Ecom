@@ -26,11 +26,10 @@ export const diplayProducts = () => async (dispatch) => {
 
 //prd by id
 export const displayProductby = (id) => async (dispatch) => {
-  console.log(id)
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST })
     const prd = products.find((el) => el._id === id)
-    console.log(prd)
+
     if (prd) {
       dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: prd })
     }

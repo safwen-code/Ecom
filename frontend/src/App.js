@@ -45,7 +45,7 @@ const App = () => {
             <Route path="/admin/userlist" element={<UserListScreen />} />
             <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
 
-            <Route path="/cart" element={<CartScreen />} />
+            <Route path="/cart/:id?" element={<CartScreen />} />
             <Route path="/profile" element={<ProfileScreen />} />
 
             <Route path="/shipping" element={<ShippingScreen />} />
