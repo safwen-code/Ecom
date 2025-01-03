@@ -20,13 +20,15 @@ import {
 } from '@mui/material'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { AddToCart, removeFromCart } from '../Actions/cartaction'
 
 const CartScreen = () => {
   const { id } = useParams()
+
   const location = useLocation()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const qty = location.search ? Number(location.search.split('=')[1]) : 1
 
@@ -40,7 +42,10 @@ const CartScreen = () => {
     console.log(id)
     dispatch(removeFromCart(id))
   }
-  const checkoutHandler = () => {}
+  const checkoutHandler = () => {
+    // navigate('/login?redirect=/shipping')
+    navigate('/shipping')
+  }
 
   const { cartItems } = useSelector((state) => state.cart)
 

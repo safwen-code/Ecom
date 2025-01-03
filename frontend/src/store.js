@@ -27,11 +27,18 @@ const cartItemsFromStorage = localStorage.getItem('cartItems')
   ? JSON.parse(localStorage.getItem('cartItems'))
   : []
 
+const shippingAdressFromStorage = localStorage.getItem('shippingAddress')
+  ? JSON.parse(localStorage.getItem('shippingAddress'))
+  : null
+
 //create initialState
 const initialState = {
   //add initial state here exp
   cltLogin: { userInfo: userLoginfromstorage },
-  cart: { cartItems: cartItemsFromStorage },
+  cart: {
+    cartItems: cartItemsFromStorage,
+    shippingAddress: shippingAdressFromStorage,
+  },
 }
 
 //create middel

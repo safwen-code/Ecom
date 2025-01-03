@@ -1,4 +1,8 @@
-import { CART_ADD_ITEM, CART_REMOVE_ITEM } from '../Constants/cartConstants'
+import {
+  CART_ADD_ITEM,
+  CART_REMOVE_ITEM,
+  CART_SAVE_SHIPPING_ADDRESS,
+} from '../Constants/cartConstants'
 import { products } from '../utils/data.js'
 
 export const AddToCart = (id, qty) => async (dispatch, getState) => {
@@ -22,4 +26,14 @@ export const AddToCart = (id, qty) => async (dispatch, getState) => {
 export const removeFromCart = (id) => async (dispatch, getState) => {
   dispatch({ type: CART_REMOVE_ITEM, payload: id })
   localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
+}
+
+export const addShippingAdress = (data) => async (dispatch) => {
+  if (data) {
+    // console.log(data)
+    dispatch({ type: CART_SAVE_SHIPPING_ADDRESS, payload: data })
+    localStorage.setItem('shippingAddress', JSON.stringify(data))
+  } else {
+    throw new Error()
+  }
 }

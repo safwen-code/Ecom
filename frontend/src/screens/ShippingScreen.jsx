@@ -3,19 +3,24 @@ import { TextField, Button, Container, Typography, Grid } from '@mui/material'
 import { motion } from 'framer-motion'
 import CheckoutSteps from './CheckoutSteps'
 import { useNavigate } from 'react-router-dom'
-import { shippingAddress } from '../utils/data'
+import { useDispatch, useSelector } from 'react-redux'
+import { addShippingAdress } from '../Actions/cartaction'
 
 const ShippingScreen = () => {
+  const cart = useSelector((state) => state.cart)
+  const { shippingAddress } = cart
+
   const [address, setAddress] = useState(shippingAddress.address)
   const [city, setCity] = useState(shippingAddress.city)
   const [postalCode, setPostalCode] = useState(shippingAddress.postalCode)
   const [country, setCountry] = useState(shippingAddress.country)
   const navigate = useNavigate()
-
+  const dispacth = useDispatch()
   const submitHandler = (e) => {
     e.preventDefault()
     // save shipping info logic here
-    navigate('/payment')
+    dispacth(addShippingAdress({ address, city, postalCode, country }))
+    // navigate('/payment')
   }
 
   const containerVariants = {
