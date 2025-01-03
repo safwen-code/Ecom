@@ -1,6 +1,7 @@
 import {
   CART_ADD_ITEM,
   CART_REMOVE_ITEM,
+  CART_SAVE_PAYMENT_METHOD,
   CART_SAVE_SHIPPING_ADDRESS,
 } from '../Constants/cartConstants'
 import { products } from '../utils/data.js'
@@ -33,6 +34,15 @@ export const addShippingAdress = (data) => async (dispatch) => {
     // console.log(data)
     dispatch({ type: CART_SAVE_SHIPPING_ADDRESS, payload: data })
     localStorage.setItem('shippingAddress', JSON.stringify(data))
+  } else {
+    throw new Error()
+  }
+}
+
+export const savePayMethod = (data) => async (dispatch) => {
+  if (data) {
+    dispatch({ type: CART_SAVE_PAYMENT_METHOD, payload: data })
+    localStorage.setItem('paymentMethod', JSON.stringify(data))
   } else {
     throw new Error()
   }

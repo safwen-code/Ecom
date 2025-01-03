@@ -13,10 +13,15 @@ import {
 } from '@mui/material'
 import { motion } from 'framer-motion'
 import CheckoutSteps from './CheckoutSteps'
-import { shippingAddress } from '../utils/data'
+import { useDispatch, useSelector } from 'react-redux'
+import { savePayMethod } from '../Actions/cartaction'
 
 const PaymentScreen = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const cart = useSelector((state) => state.cart)
+  const { shippingAddress } = cart
 
   if (!shippingAddress) {
     navigate('/shipping')
@@ -27,6 +32,7 @@ const PaymentScreen = () => {
   const submitHandler = (e) => {
     e.preventDefault()
     // Save payment method logic here
+    dispatch(savePayMethod(paymentMethod))
     navigate('/placeorder')
   }
 

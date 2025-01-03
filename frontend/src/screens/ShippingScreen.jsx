@@ -20,7 +20,7 @@ const ShippingScreen = () => {
     e.preventDefault()
     // save shipping info logic here
     dispacth(addShippingAdress({ address, city, postalCode, country }))
-    // navigate('/payment')
+    navigate('/payment')
   }
 
   const containerVariants = {
