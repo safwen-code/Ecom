@@ -1,10 +1,10 @@
 const { pool } = require('../connectdb.js')
 const asyncHandler = require('express-async-handler')
-const hashpassword = require('../utils/hashpasword.js')
+const { hashpassword, camparePassword } = require('../utils/hashpasword.js')
 const generatetoken = require('../utils/generatetoken.js')
 
-//Add user
-const addUser = asyncHandler(async (req, res) => {
+//register user
+const registerUser = asyncHandler(async (req, res) => {
   try {
     const { name, email, password } = req.body
 
@@ -40,6 +40,26 @@ const addUser = asyncHandler(async (req, res) => {
   } catch (error) {
     console.error(error.message)
     res.status(500).json({ msg: 'Server error' })
+  }
+})
+
+//login User
+const loginUser = asyncHandler(async (req, res) => {
+  try {
+    const { email, password } = req.body
+    let test = 'SELECT id, name, email , password FROM "user" WHERE email = $1'
+    const rest = await pool.query(test, [email])
+    const user = rest.rows[0]
+    if (user && camparePassword(password, user.password)) {
+      res.status(201).json({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        token: generatetoken(user.id),
+      })
+    }
+  } catch (error) {
+    console.error(error.message)
   }
 })
 
@@ -92,4 +112,11 @@ const deleteUser = asyncHandler(async (req, res) => {
     console.log(error.message)
   }
 })
-module.exports = { addUser, getUserId, getAllUser, updatedUser, deleteUser }
+module.exports = {
+  registerUser,
+  loginUser,
+  getUserId,
+  getAllUser,
+  updatedUser,
+  deleteUser,
+}
