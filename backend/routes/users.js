@@ -4,17 +4,21 @@ const express = require('express')
 const router = express.Router()
 
 const {
-  addUser,
+  registerUser,
+  loginUser,
   getAllUser,
   getUserId,
   updatedUser,
   deleteUser,
 } = require('../controller/userController')
 
-router.get('/all', getAllUser)
-router.get('/:id', getUserId)
-router.post('/login', addUser)
-router.put('/update/:id', updatedUser)
+const protect = require('../middelware/authMiddel')
+
+router.post('/register', registerUser)
+router.post('/auth', loginUser)
+router.get('/all', protect, getAllUser)
+router.get('/:id', protect, getUserId)
+router.put('/update/:id', protect, updatedUser)
 router.delete('/delete/:id', deleteUser)
 
 module.exports = router
