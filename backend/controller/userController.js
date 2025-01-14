@@ -99,7 +99,7 @@ const getAllUser = asyncHandler(async (req, res) => {
 })
 
 //update user by id
-//status : nothing
+//status : done
 const updatedUser = asyncHandler(async (req, res) => {
   try {
     let id = req.params.id
@@ -121,14 +121,19 @@ const updatedUser = asyncHandler(async (req, res) => {
   }
 })
 //delete user
-//status : nothing
+//status : done
 const deleteUser = asyncHandler(async (req, res) => {
   try {
     let id = req.params.id
-    const del = `delete from "user" where id = ${id}`
+    const del = `delete from "user" where id = ${id} RETURNING  name, email, password`
     const reslt = await pool.query(del)
-    console.log(reslt)
-    res.send('delete user')
+    const user = reslt && reslt.rows[0]
+    reslt.rowCount === 0
+      ? res.status(404).json('user not found')
+      : res.status(200).json({
+          name: user.name,
+          email: user.email,
+        })
   } catch (error) {
     console.log(error.message)
   }
