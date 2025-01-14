@@ -4,6 +4,7 @@ const { hashpassword, camparePassword } = require('../utils/hashpasword.js')
 const generatetoken = require('../utils/generatetoken.js')
 
 //register user
+//status : done
 const registerUser = asyncHandler(async (req, res) => {
   try {
     const { name, email, password } = req.body
@@ -44,6 +45,7 @@ const registerUser = asyncHandler(async (req, res) => {
 })
 
 //login User
+//status : done
 const loginUser = asyncHandler(async (req, res) => {
   try {
     const { email, password } = req.body
@@ -64,13 +66,20 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 //display user by id
+//status : nothing
 const getUserId = asyncHandler(async (req, res) => {
   const id = req.params.id
   try {
-    let test = `SELECT * FROM "user" WHERE id = ${id}`
-    const result = await pool.query(test)
-    console.log(result.rows)
-    res.send('<h1>hello from id</h1>')
+    let test = `SELECT * FROM "user" WHERE id = $1`
+    const result = await pool.query(test, [id])
+    const user = result.rows[0]
+    user
+      ? res.status(200).json({
+          name: user.name,
+          email: user.email,
+          password: user.password,
+        })
+      : res.status(400).json('user not found by his id')
   } catch (error) {
     console.log(error.message)
   }
@@ -87,6 +96,7 @@ const getAllUser = asyncHandler(async (req, res) => {
   }
 })
 //update user by id
+//status : nothing
 const updatedUser = asyncHandler(async (req, res) => {
   try {
     let id = req.params.id
@@ -101,6 +111,7 @@ const updatedUser = asyncHandler(async (req, res) => {
   }
 })
 //delete user
+//status : nothing
 const deleteUser = asyncHandler(async (req, res) => {
   try {
     let id = req.params.id
