@@ -86,6 +86,7 @@ const getUserId = asyncHandler(async (req, res) => {
 })
 
 //display users
+//status : done
 const getAllUser = asyncHandler(async (req, res) => {
   try {
     let test = 'SELECT * FROM "user" '
@@ -96,16 +97,24 @@ const getAllUser = asyncHandler(async (req, res) => {
     console.log(error.message)
   }
 })
+
 //update user by id
 //status : nothing
 const updatedUser = asyncHandler(async (req, res) => {
   try {
     let id = req.params.id
     const { name, email, password } = req.body
-    const upd = `UPDATE "user" SET name=$1, email=$2, password=$3 where id = ${id};`
+    const upd = `UPDATE "user" SET name=$1, email=$2, password=$3 where id = ${id} RETURNING  name, email, password;`
     const vls = [name, email, password]
     const reslt = await pool.query(upd, vls)
-    console.log(reslt.rows)
+    reslt.rowCount === 0
+      ? res.status(400).json('some problem')
+      : res.status(201).json({
+          name: name,
+          email: email,
+          password: hashpassword(password),
+          token: generatetoken(id),
+        })
     res.send('update user')
   } catch (error) {
     console.log(error.message)
