@@ -66,7 +66,7 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 //display user by id
-//status : nothing
+//status : done
 const getUserId = asyncHandler(async (req, res) => {
   const id = req.params.id
   try {
@@ -84,13 +84,14 @@ const getUserId = asyncHandler(async (req, res) => {
     console.log(error.message)
   }
 })
+
 //display users
 const getAllUser = asyncHandler(async (req, res) => {
   try {
     let test = 'SELECT * FROM "user" '
     const resut = await pool.query(test)
-    console.log(resut.rows)
-    res.send('<h1>Hello</h1>') // Display "hello" in an HTML heading
+    const users = resut.rows
+    res.status(200).json(users)
   } catch (error) {
     console.log(error.message)
   }
