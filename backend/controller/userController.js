@@ -2,11 +2,24 @@ const { pool } = require('../connectdb.js')
 const asyncHandler = require('express-async-handler')
 const hashpassword = require('../utils/hashpasword.js')
 const generatetoken = require('../utils/generatetoken.js')
+
 //Add user
 const addUser = asyncHandler(async (req, res) => {
   try {
     const { name, email, password } = req.body
+
+    // Check if the user exists
+    let test = `SELECT id, name, email, password FROM "user" WHERE email = $1`
+    const userExist = await pool.query(test, [email])
+
+    if (userExist.rows.length > 0) {
+      return res.status(400).json({ msg: 'User already exists' })
+    }
+
+    // Hash the password
     let newpass = hashpassword(password)
+
+    // Insert new user
     const insert = `
       INSERT INTO "user" (name, email, password)
       VALUES ($1, $2, $3)
@@ -14,18 +27,19 @@ const addUser = asyncHandler(async (req, res) => {
     `
     const values = [name, email, newpass]
     const rest = await pool.query(insert, values)
+
     const { id } = rest.rows[0]
-    if (rest) {
-      res.json({
-        name,
-        email,
-        password,
-        token: generatetoken(id),
-      })
-    }
-    res.send('add user')
+
+    // Send  response
+    res.status(201).json({
+      name,
+      email,
+      password,
+      token: generatetoken(id),
+    })
   } catch (error) {
-    console.log(error.message)
+    console.error(error.message)
+    res.status(500).json({ msg: 'Server error' })
   }
 })
 
