@@ -14,7 +14,7 @@ const protect = asyncHandler(async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1]
       const decoded = jwt.verify(token, JWT_SECRET)
 
-      const query = `SELECT * FROM "user" WHERE id=$1`
+      const query = `SELECT * FROM "users" WHERE id=$1`
       const result = await pool.query(query, [decoded.id])
 
       if (result.rows.length === 0) {
