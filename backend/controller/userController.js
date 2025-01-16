@@ -10,7 +10,8 @@ const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body
 
     // Check if the user exists
-    let test = `SELECT id, name, email, password FROM "user" WHERE email = $1`
+    let test = `SELECT id, name, email, password 
+    FROM "users" WHERE email = $1`
     const userExist = await pool.query(test, [email])
 
     if (userExist.rows.length > 0) {
@@ -22,7 +23,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // Insert new user
     const insert = `
-      INSERT INTO "user" (name, email, password)
+      INSERT INTO "users" (name, email, password)
       VALUES ($1, $2, $3)
       RETURNING *;
     `
@@ -49,7 +50,7 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
   try {
     const { email, password } = req.body
-    let test = 'SELECT id, name, email , password FROM "user" WHERE email = $1'
+    let test = 'SELECT id, name, email , password FROM "users" WHERE email = $1'
     const rest = await pool.query(test, [email])
     const user = rest.rows[0]
     if (user && camparePassword(password, user.password)) {
@@ -70,7 +71,7 @@ const loginUser = asyncHandler(async (req, res) => {
 const getUserId = asyncHandler(async (req, res) => {
   const id = req.params.id
   try {
-    let test = `SELECT * FROM "user" WHERE id = $1`
+    let test = `SELECT * FROM "users" WHERE id = $1`
     const result = await pool.query(test, [id])
     const user = result.rows[0]
     user
@@ -89,7 +90,7 @@ const getUserId = asyncHandler(async (req, res) => {
 //status : done
 const getAllUser = asyncHandler(async (req, res) => {
   try {
-    let test = 'SELECT * FROM "user" '
+    let test = 'SELECT * FROM "users" '
     const resut = await pool.query(test)
     const users = resut.rows
     res.status(200).json(users)
@@ -103,8 +104,9 @@ const getAllUser = asyncHandler(async (req, res) => {
 const updatedUser = asyncHandler(async (req, res) => {
   try {
     let id = req.params.id
+
     const { name, email, password } = req.body
-    const upd = `UPDATE "user" SET name=$1, email=$2, password=$3 where id = ${id} RETURNING  name, email, password;`
+    const upd = `UPDATE "users" SET name=$1, email=$2, password=$3 where id = ${id} RETURNING  name, email, password;`
     const vls = [name, email, password]
     const reslt = await pool.query(upd, vls)
     reslt.rowCount === 0
@@ -125,7 +127,7 @@ const updatedUser = asyncHandler(async (req, res) => {
 const deleteUser = asyncHandler(async (req, res) => {
   try {
     let id = req.params.id
-    const del = `delete from "user" where id = ${id} RETURNING  name, email, password`
+    const del = `delete from "users" where id = ${id} RETURNING  name, email, password`
     const reslt = await pool.query(del)
     const user = reslt && reslt.rows[0]
     reslt.rowCount === 0
