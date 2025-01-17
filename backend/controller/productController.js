@@ -172,12 +172,13 @@ const updateProduct = asynchandler(async (req, res) => {
 const deleteProduct = asynchandler(async (req, res) => {
   try {
     const id = req.params.id
-    let query = `delete from "products" where id = ${id} `
+    let query = `delete from "products" where id = ${id} RETURNING image `
     const result = await pool.query(query)
     if (result.rowCount === 0) {
       res.status(404).json('problem in delete thing')
     } else {
       res.status(200).json('product deleted')
+
       if (result.rows[0].image && fs.existsSync(result.rows[0].image)) {
         fs.unlinkSync(result.rows[0].image)
       }
