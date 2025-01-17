@@ -200,10 +200,77 @@ const deleteProduct = asynchandler(async (req, res) => {
   }
 })
 
+// add some reviews
+//:id/reviews
+//to do
+const addReview = asynchandler(async (req, res) => {
+  try {
+    const { rating, comment } = req.body
+    //check user exist
+    if (!req.user) {
+      res.status(500).json('not authentification')
+    }
+    let {
+      rows: productRow,
+    } = await pool.query(`SELECT * FROM "products" WHERE id = $1`, [
+      req.params.id,
+    ])
+    let product = productRow
+    if (!product) {
+      res.status(404).json('no product found')
+    }
+    //check if user already review this product
+    const {
+      rows: reviewsRow,
+    } = await pool.query(
+      `SELECT * FROM "reviews" WHERE user_id = $1 AND product_id = $2`,
+      [req.user.id, req.params.id],
+    )
+    if (reviewsRow.length > 0) {
+      res.status(400).json('you already review this product')
+    } else {
+      //add review
+      await pool.query(
+        'INSERT INTO "reviews" (product_id, user_id, name, rating, comment, created_at) VALUES ($1, $2, $3, $4, $5, $6)',
+        [
+          req.params.id,
+          req.user.id,
+          req.user.name,
+          rating,
+          comment,
+          new Date(),
+        ],
+      )
+
+      // Recalculate the product rating
+      const {
+        rows: updatedReviews,
+      } = await pool.query(
+        'SELECT rating FROM "reviews" WHERE product_id = $1',
+        [req.params.id],
+      )
+
+      const newRating =
+        updatedReviews.reduce((acc, item) => acc + parseFloat(item.rating), 0) /
+        updatedReviews.length
+      //update data
+      await pool.query('UPDATE "products" SET rating = $1 WHERE id = $2', [
+        newRating,
+        req.params.id,
+      ])
+
+      res.status(201).json({ message: 'Review added successfully' })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json('take look of clg')
+  }
+})
 module.exports = {
   addProduct,
   allProducts,
   getProduct,
   updateProduct,
   deleteProduct,
+  addReview,
 }
