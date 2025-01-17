@@ -5,7 +5,7 @@ const { ConnectionDb, pool } = require('./connectdb')
 
 //require route
 const users = require('./routes/users')
-
+const products = require('./routes/products')
 //cnt to db
 ConnectionDb()
 
@@ -18,6 +18,10 @@ app.use(express.urlencoded({ extended: true }))
 
 // ********** Setup Routes **********
 app.use('/api/users', users)
+app.use('/api/products', products)
+
+// get access to folder upload
+app.use('/uploads', express.static('uploads'))
 
 // ********** Start Server **********
 app.listen(3000, () => {
