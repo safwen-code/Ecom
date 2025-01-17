@@ -8,6 +8,7 @@ const {
   getProduct,
   updateProduct,
   deleteProduct,
+  addReview,
 } = require('../controller/productController')
 const protect = require('../middelware/authMiddel')
 const upload = require('../middelware/uploadMiddel')
@@ -25,4 +26,8 @@ router.put('/update/:id', protect, upload.single('image'), updateProduct)
 
 //delete product
 router.delete('/delete/:id', protect, deleteProduct)
+
+//add review
+router.post('/:id/review', protect, addReview)
+
 module.exports = router

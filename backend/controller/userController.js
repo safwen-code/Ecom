@@ -104,7 +104,6 @@ const getAllUser = asyncHandler(async (req, res) => {
 const updatedUser = asyncHandler(async (req, res) => {
   try {
     let id = req.params.id
-
     const { name, email, password } = req.body
     const upd = `UPDATE "users" SET name=$1, email=$2, password=$3 where id = ${id} RETURNING  name, email, password;`
     const vls = [name, email, password]

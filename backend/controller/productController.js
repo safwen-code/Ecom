@@ -266,6 +266,9 @@ const addReview = asynchandler(async (req, res) => {
     res.status(500).json('take look of clg')
   }
 })
+
+// get top product by rating
+
 module.exports = {
   addProduct,
   allProducts,

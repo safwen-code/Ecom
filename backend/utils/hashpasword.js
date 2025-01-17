@@ -9,4 +9,8 @@ const hashpassword = (password) => {
   return hash && hash
 }
 
-module.exports = hashpassword
+const camparePassword = (pass, hash) => {
+  return bcrypt.compare(pass, hash)
+}
+
+module.exports = { hashpassword, camparePassword }

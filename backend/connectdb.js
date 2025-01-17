@@ -1,7 +1,7 @@
-const { Client } = require('pg')
+const Pool = require('pg').Pool
 
 // ********** Connect to DB (pgAdmin) **********
-const connectdb = new Client({
+const pool = new Pool({
   user: 'postgres',
   password: 'pascal',
   host: 'localhost',
@@ -11,7 +11,7 @@ const connectdb = new Client({
 
 const ConnectionDb = async () => {
   try {
-    await connectdb.connect()
+    await pool.connect()
     console.log('La base de données est connectée')
   } catch (error) {
     console.error(
@@ -22,4 +22,4 @@ const ConnectionDb = async () => {
   }
 }
 
-module.exports = ConnectionDb
+module.exports = { ConnectionDb, pool }
