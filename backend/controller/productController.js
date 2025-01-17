@@ -1,6 +1,7 @@
 const asynchandler = require('express-async-handler')
 const { pool } = require('../connectdb')
-
+const path = require('path')
+const fs = require('fs')
 // Add product
 const addProduct = asynchandler(async (req, res) => {
   try {
@@ -15,11 +16,18 @@ const addProduct = asynchandler(async (req, res) => {
       return res.status(400).json({ message: 'Invalid user ID' })
     }
 
+    //check if req.file not null
+    if (!req.file) {
+      res.status(404).json('no file uploads')
+    }
+    //add filename to uploads doc
+    const filename = req.file.filename
+    const imagePath = path.join('uploads', filename)
+
     // Extract product details from the request body
     const {
       name,
       price,
-      image,
       category,
       countInStock,
       numReviews,
@@ -27,7 +35,7 @@ const addProduct = asynchandler(async (req, res) => {
     } = req.body
 
     // Validate required fields
-    if (!name || !price || !image || !category || !description) {
+    if (!name || !price || !imagePath || !category || !description) {
       return res
         .status(400)
         .json({ message: 'Missing required fields in the request body' })
@@ -37,7 +45,7 @@ const addProduct = asynchandler(async (req, res) => {
     const vls = [
       name,
       user_id,
-      image,
+      imagePath,
       category,
       countInStock || 0, // Default to 0 if not provided
       numReviews || 0, // Default to 0 if not provided
@@ -58,6 +66,7 @@ const addProduct = asynchandler(async (req, res) => {
 
     // Check result and respond
     if (result.rowCount === 0) {
+      fs.unlinkSync(imagePath)
       return res.status(400).json({ message: 'Product could not be added' })
     }
 
