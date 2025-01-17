@@ -2,10 +2,27 @@ const express = require('express')
 
 const router = express.Router()
 
-const { addProduct } = require('../controller/productController')
+const {
+  addProduct,
+  allProducts,
+  getProduct,
+  updateProduct,
+  deleteProduct,
+} = require('../controller/productController')
 const protect = require('../middelware/authMiddel')
 const upload = require('../middelware/uploadMiddel')
 //add product
 router.post('/addproduct', protect, upload.single('image'), addProduct)
 
+//get all products
+router.get('/allProducts', protect, allProducts)
+
+//get product
+router.get('/:id', protect, getProduct)
+
+//upload product
+router.put('/update/:id', protect, upload.single('image'), updateProduct)
+
+//delete product
+router.delete('/delete/:id', protect, deleteProduct)
 module.exports = router
