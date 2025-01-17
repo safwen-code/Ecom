@@ -108,4 +108,63 @@ const getProduct = asynchandler(async (req, res) => {
   }
 })
 
-module.exports = { addProduct, allProducts, getProduct }
+const updateProduct = asynchandler(async (req, res) => {
+  try {
+    //id product
+    const id = req.params.id
+
+    if (!req.file) {
+      return res.status(404).json('no file')
+    }
+    //set the new image
+    let imagePath = path.join('uploads', req.file.filename)
+
+    //get the old image
+    let query1 = `SELECT  *  FROM "products" WHERE id = ${id}`
+
+    const result1 = await pool.query(query1)
+    if (result1.rowCount === 0) {
+      fs.unlinkSync(imagePath)
+      return res.status(404).json('No product by this id')
+    }
+
+    const oldimage = result1.rows[0].image
+    const {
+      name,
+      category,
+      description,
+      rating,
+      num_reviews,
+      price,
+      count_in_stock,
+    } = req.body
+
+    const query = `UPDATE  "products" SET
+      name=$1, image=$2, category=$3, description=$4, rating=$5, num_reviews=$6, price=$7, count_in_stock =$8
+    WHERE id = ${id} RETURNING *`
+    const vls = [
+      name,
+      imagePath,
+      category,
+      description,
+      rating,
+      num_reviews,
+      price,
+      count_in_stock,
+    ]
+    const result = await pool.query(query, vls)
+    console.log(result.rows[0])
+    result.rowCount === 0
+      ? res.status(404).json('some problem no data updated')
+      : res.status(201).json(result.rows[0])
+    //delete old image
+    if (oldimage && fs.existsSync(oldimage)) {
+      fs.unlinkSync(oldimage)
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json('take loook for clg')
+  }
+})
+
+module.exports = { addProduct, allProducts, getProduct, updateProduct }
