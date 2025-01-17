@@ -94,4 +94,18 @@ const allProducts = asynchandler(async (req, res) => {
   }
 })
 
-module.exports = { addProduct, allProducts }
+//get by id
+const getProduct = asynchandler(async (req, res) => {
+  try {
+    let id = req.params.id
+    const query = `SELECT * FROM "products" WHERE id = $1`
+    const vls = [id]
+    const result = await pool.query(query, vls)
+    res.json(result.rows)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json('server error')
+  }
+})
+
+module.exports = { addProduct, allProducts, getProduct }
