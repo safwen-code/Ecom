@@ -108,6 +108,7 @@ const getProduct = asynchandler(async (req, res) => {
   }
 })
 
+//update by id and delete file if exist
 const updateProduct = asynchandler(async (req, res) => {
   try {
     //id product
@@ -167,4 +168,29 @@ const updateProduct = asynchandler(async (req, res) => {
   }
 })
 
-module.exports = { addProduct, allProducts, getProduct, updateProduct }
+//delete products and his file
+const deleteProduct = asynchandler(async (req, res) => {
+  try {
+    const id = req.params.id
+    let query = `delete from "products" where id = ${id} `
+    const result = await pool.query(query)
+    if (result.rowCount === 0) {
+      res.status(404).json('problem in delete thing')
+    } else {
+      res.status(200).json('product deleted')
+      if (result.rows[0].image && fs.existsSync(result.rows[0].image)) {
+        fs.unlinkSync(result.rows[0].image)
+      }
+    }
+  } catch (error) {
+    console.error(error)
+  }
+})
+
+module.exports = {
+  addProduct,
+  allProducts,
+  getProduct,
+  updateProduct,
+  deleteProduct,
+}
