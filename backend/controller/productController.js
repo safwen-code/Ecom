@@ -2,6 +2,7 @@ const asynchandler = require('express-async-handler')
 const { pool } = require('../connectdb')
 const path = require('path')
 const fs = require('fs')
+
 // Add product
 const addProduct = asynchandler(async (req, res) => {
   try {
@@ -77,4 +78,20 @@ const addProduct = asynchandler(async (req, res) => {
   }
 })
 
-module.exports = { addProduct }
+//get all products
+const allProducts = asynchandler(async (req, res) => {
+  try {
+    //query
+    let query = `SELECT * FROM "products" `
+    //get from pool
+    const result = await pool.query(query)
+    result.rowCount === 0
+      ? res.status(404).json('no Porduct add some data')
+      : res.status(200).json(result.rows)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json('message error')
+  }
+})
+
+module.exports = { addProduct, allProducts }
