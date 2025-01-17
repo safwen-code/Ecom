@@ -71,7 +71,7 @@ const addProduct = asynchandler(async (req, res) => {
       return res.status(400).json({ message: 'Product could not be added' })
     }
 
-    res.status(200).json(result.rows[0]) // Return the inserted row
+    res.status(200).json(result.rows[0]) // Return data
   } catch (error) {
     console.error('Error adding product:', error)
     res.status(500).json({ message: 'Server error' })
@@ -114,6 +114,17 @@ const updateProduct = asynchandler(async (req, res) => {
     //id product
     const id = req.params.id
 
+    // Ensure req.user._id exists and is valid
+    if (!req.user || !req.user.id) {
+      return res.status(400).json({ message: 'User not authenticated' })
+    }
+
+    // Extract and validate user ID
+    const user_id = parseInt(req.user.id, 10)
+    if (isNaN(user_id)) {
+      return res.status(400).json({ message: 'Invalid user ID' })
+    }
+
     if (!req.file) {
       return res.status(404).json('no file')
     }
@@ -141,9 +152,10 @@ const updateProduct = asynchandler(async (req, res) => {
     } = req.body
 
     const query = `UPDATE  "products" SET
-      name=$1, image=$2, category=$3, description=$4, rating=$5, num_reviews=$6, price=$7, count_in_stock =$8
+     user_id=$1, name=$2, image=$3, category=$4, description=$5, rating=$6, num_reviews=$7, price=$8, count_in_stock =$9
     WHERE id = ${id} RETURNING *`
     const vls = [
+      user_id,
       name,
       imagePath,
       category,
