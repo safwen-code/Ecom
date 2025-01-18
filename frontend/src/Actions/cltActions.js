@@ -7,25 +7,23 @@ import {
   USER_REGISTER_SUCCESS,
 } from '../Constants/cltConstants'
 import { users } from '../utils/data'
+import axios from 'axios'
 
 export const LoginUser = (email, password) => async (dispatch) => {
   try {
-    const user =
-      users.find(
-        (user) => user.email === email && user.password === password,
-      ) || null
-    console.log(user)
     dispatch({ type: USER_LOGIN_REQUEST })
-    if (user) {
-      dispatch({ type: USER_LOGIN_SUCCESS, payload: user })
+
+    const { data } = await axios.get('/api/users/auth', {
+      params: { email, password },
+    })
+    console.log(data)
+    if (data) {
+      dispatch({ type: USER_LOGIN_SUCCESS, payload: data })
       //add to storage
-      localStorage.setItem('userInfo', JSON.stringify(user))
-    }
-    if (!user) {
-      dispatch({ type: USER_LOGIN_FAIL, payload: 'No User Found' })
+      localStorage.setItem('userInfo', JSON.stringify(data))
     }
   } catch (error) {
-    dispatch({ type: USER_LOGIN_FAIL, payload: error.message })
+    dispatch({ type: USER_LOGIN_FAIL, payload: error })
   }
 }
 
