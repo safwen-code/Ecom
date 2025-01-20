@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Message from '../layout/Message'
 import Loader from '../layout/Loader'
 import {
@@ -11,10 +11,22 @@ import {
   Grid,
 } from '@mui/material'
 import { motion } from 'framer-motion'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { LoginUser } from '../Actions/cltActions'
 
 const Login = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+  //redirect path if user is login or not
+  const redirect = location.search ? location.search.split('=')[1] : '/'
+  const cltLogin = useSelector((state) => state.cltLogin)
+  const { loading, userInfo, error } = cltLogin
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect)
+    }
+  }, [userInfo, navigate, redirect])
   const [email, setemail] = useState('')
   const [password, setpassword] = useState('')
   const dispatch = useDispatch()
@@ -23,9 +35,6 @@ const Login = () => {
     e.preventDefault()
     dispatch(LoginUser(email, password))
   }
-
-  const error = ''
-  const loading = false
 
   // Framer motion variants
   const formVariant = {

@@ -7,11 +7,13 @@ import {
   PRODUCT_LIST_SUCCESS,
 } from '../Constants/prdConstants'
 import { products } from '../utils/data'
-
+import axios from 'axios'
 //all prd
 export const diplayProducts = () => async (dispatch) => {
   dispatch({ type: PRODUCT_LIST_REQUEST })
   try {
+    const { data } = await axios.get('/api/products/allProducts')
+    console.log(data)
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
       payload: products,
