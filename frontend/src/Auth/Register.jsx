@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Message from '../layout/Message'
 import Loader from '../layout/Loader'
 import {
@@ -11,7 +11,7 @@ import {
   Grid,
 } from '@mui/material'
 import { motion } from 'framer-motion'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RegisterUser } from '../Actions/cltActions'
 
 const Register = () => {
@@ -23,9 +23,16 @@ const Register = () => {
   const [confirmpassword, setconfirmpassword] = useState('')
   const [message, setmessage] = useState(null)
 
+  const navigate = useNavigate()
   const location = useLocation()
   const redirect = location.search ? location.search.split('=')[1] : '/'
-
+  const cltRegister = useSelector((state) => state.cltRegister)
+  const { userInfo } = cltRegister
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect)
+    }
+  }, [userInfo, redirect, navigate])
   const submitHandler = (e) => {
     e.preventDefault()
     if (password !== confirmpassword) {
