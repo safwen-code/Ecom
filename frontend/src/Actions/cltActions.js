@@ -47,3 +47,9 @@ export const RegisterUser = (name, email, password) => async (dispatch) => {
     dispatch({ type: USER_REGISTER_FAIL, payload: error.message })
   }
 }
+
+//get user profile
+//update user profile
+//liste users
+//delete user
+//update user
