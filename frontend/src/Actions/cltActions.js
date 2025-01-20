@@ -16,7 +16,7 @@ export const LoginUser = (email, password) => async (dispatch) => {
     const { data } = await axios.get('/api/users/auth', {
       params: { email, password },
     })
-    console.log(data)
+    // console.log(data)
     if (data) {
       dispatch({ type: USER_LOGIN_SUCCESS, payload: data })
       //add to storage
@@ -30,10 +30,18 @@ export const LoginUser = (email, password) => async (dispatch) => {
 export const RegisterUser = (name, email, password) => async (dispatch) => {
   try {
     dispatch({ type: USER_REGISTER_REQUEST })
-    const user = { name, email, password }
-    if (user) {
-      dispatch({ type: USER_REGISTER_SUCCESS, payload: user })
-      localStorage.setItem('userInfo', JSON.stringify(user))
+    const config = {
+      headers: { 'Content-Type': 'application/json' },
+    }
+    const { data } = await axios.post(
+      '/api/users/register',
+      { name, email, password },
+      config,
+    )
+    console.log(data, 'from regisetr fc')
+    if (data) {
+      dispatch({ type: USER_REGISTER_SUCCESS, payload: data })
+      localStorage.setItem('userInfo', JSON.stringify(data))
     }
   } catch (error) {
     dispatch({ type: USER_REGISTER_FAIL, payload: error.message })
