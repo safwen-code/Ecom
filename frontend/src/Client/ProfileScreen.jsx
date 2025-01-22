@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import Message from '../layout/Message'
 import Loader from '../layout/Loader'
 import {
@@ -19,20 +19,43 @@ import {
 } from '@mui/material'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { orders } from '../utils/data'
+import { useSelector, useDispatch } from 'react-redux'
+import { GetUserId } from '../Actions/cltActions'
 
 const ProfileScreen = () => {
+  const navigate = useNavigate()
+
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [message, setMessage] = useState(null)
 
-  const loading = false
-  const error = false
-
   //get orders
   const loadingOrders = false
   const errorOrders = false
+  //get lohin user
+  const cltLogin = useSelector((state) => state.cltLogin)
+  const { userInfo } = cltLogin
+  // get user detail
+  const cltDetails = useSelector((state) => state.cltDetails)
+  const { loading, error, user } = cltDetails || {}
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (!userInfo) {
+      navigate('/login')
+    } else {
+      if (!user || !user.name) {
+        dispatch(GetUserId(userInfo.id))
+      } else {
+        setName(user.name)
+        setEmail(user.email)
+      }
+    }
+  }, [userInfo, navigate, dispatch, user])
+
   const submitHandler = (e) => {
     e.preventDefault()
     if (password !== confirmPassword) {
