@@ -1,4 +1,7 @@
 import {
+  USER_DETAILS_FAIL,
+  USER_DETAILS_REQUEST,
+  USER_DETAILS_SUCCESS,
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -6,7 +9,6 @@ import {
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
 } from '../Constants/cltConstants'
-import { users } from '../utils/data'
 import axios from 'axios'
 
 export const LoginUser = (email, password) => async (dispatch) => {
@@ -23,7 +25,13 @@ export const LoginUser = (email, password) => async (dispatch) => {
       localStorage.setItem('userInfo', JSON.stringify(data))
     }
   } catch (error) {
-    dispatch({ type: USER_LOGIN_FAIL, payload: error })
+    dispatch({
+      type: USER_LOGIN_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
   }
 }
 
@@ -49,7 +57,42 @@ export const RegisterUser = (name, email, password) => async (dispatch) => {
 }
 
 //get user profile
+export const GetUserId = (id) => async (dispatch, getState) => {
+  try {
+    const {
+      cltLogin: { userInfo },
+    } = getState()
+    if (!userInfo || !userInfo.token) {
+      console.log('no token is here')
+    }
+    const token = userInfo.token
+
+    dispatch({ type: USER_DETAILS_REQUEST })
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }
+    const { data } = await axios.get(`/api/users/${id}`, config)
+    console.log(data)
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: USER_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
 //update user profile
+
 //liste users
 //delete user
 //update user
