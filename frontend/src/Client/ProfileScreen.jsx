@@ -20,7 +20,8 @@ import {
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { orders } from '../utils/data'
 import { useSelector, useDispatch } from 'react-redux'
-import { GetUserId } from '../Actions/cltActions'
+import { GetUserId, UpdateUserId } from '../Actions/cltActions'
+import { USER_UPDATE_PROFILE_RESET } from '../Constants/cltConstants'
 
 const ProfileScreen = () => {
   const navigate = useNavigate()
@@ -34,24 +35,32 @@ const ProfileScreen = () => {
   //get orders
   const loadingOrders = false
   const errorOrders = false
+
   //get lohin user
   const cltLogin = useSelector((state) => state.cltLogin)
   const { userInfo } = cltLogin
+
   // get user detail
   const cltDetails = useSelector((state) => state.cltDetails)
   const { loading, error, user } = cltDetails || {}
 
+  // get updated user
+  const cltUpdate = useSelector((state) => state.cltUpdate)
+  const { success } = cltUpdate
+
   const dispatch = useDispatch()
 
   useEffect(() => {
+    console.log(userInfo.id)
     if (!userInfo) {
       navigate('/login')
     } else {
       if (!user || !user.name) {
+        // dispatch({ type: USER_UPDATE_PROFILE_RESET })
         dispatch(GetUserId(userInfo.id))
       } else {
-        setName(user.name)
-        setEmail(user.email)
+        setName(user.name || userInfo.name)
+        setEmail(user.email || userInfo.email)
       }
     }
   }, [userInfo, navigate, dispatch, user])
@@ -62,6 +71,14 @@ const ProfileScreen = () => {
       setMessage('Passwords do not match')
     } else {
       //update Profile
+      dispatch(
+        UpdateUserId({
+          id: user.id,
+          name: name,
+          email: email,
+          password: password,
+        }),
+      )
     }
   }
 
@@ -85,7 +102,7 @@ const ProfileScreen = () => {
               </Typography>
               {message && <Message variant="error">{message}</Message>}
               {error && <Message variant="error">{error}</Message>}
-              {loading && <Loader />}
+              {/* {loading && <Loader />} */}
               <TextField
                 margin="normal"
                 required
