@@ -8,6 +8,9 @@ import {
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
+  USER_UPDATE_PROFILE_FAIL,
+  USER_UPDATE_PROFILE_REQUEST,
+  USER_UPDATE_PROFILE_SUCCESS,
 } from '../Constants/cltConstants'
 import axios from 'axios'
 
@@ -92,6 +95,48 @@ export const GetUserId = (id) => async (dispatch, getState) => {
 }
 
 //update user profile
+export const UpdateUserId = (user) => async (dispatch, getState) => {
+  try {
+    const {
+      cltLogin: { userInfo },
+    } = getState()
+    if (!userInfo || !userInfo.token) {
+      console.log('no token exist')
+    } else {
+      const token = userInfo.token
+      dispatch({ type: USER_UPDATE_PROFILE_REQUEST })
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+
+      if (user) {
+        const { data } = await axios.put(
+          `/api/users/update/${user.id}`,
+          user,
+          config,
+        )
+
+        dispatch({ type: USER_UPDATE_PROFILE_SUCCESS, payload: data })
+        dispatch({ type: USER_LOGIN_SUCCESS, payload: data })
+        dispatch({ type: USER_DETAILS_SUCCESS, payload: data })
+
+        localStorage.setItem('userInfo', JSON.stringify(data))
+      }
+    }
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_PROFILE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
 
 //liste users
 //delete user
