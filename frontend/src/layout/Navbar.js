@@ -13,7 +13,8 @@ import {
 import AdbIcon from '@mui/icons-material/Adb'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import SearchBox from './SearchBox'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { logoutuser } from '../Actions/cltActions'
 
 const Navbar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null)
@@ -28,8 +29,9 @@ const Navbar = () => {
 
   const isCartFull = 10
 
+  const dispatch = useDispatch()
   const logoutHandler = () => {
-    console.log('first')
+    dispatch(logoutuser())
   }
   const cltLogin = useSelector((state) => state.cltLogin)
   const { userInfo } = cltLogin

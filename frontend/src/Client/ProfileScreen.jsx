@@ -51,7 +51,6 @@ const ProfileScreen = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    console.log(userInfo.id)
     if (!userInfo) {
       navigate('/login')
     } else {

@@ -4,7 +4,12 @@ import { composeWithDevTools } from '@redux-devtools/extension'
 
 //import reducers
 import { prdDetailsReducer, prdListReducer } from './Reducers/prdReducers'
-import { loginReducer, registerReducer } from './Reducers/cltReducers'
+import {
+  loginReducer,
+  registerReducer,
+  userIdReducer,
+  userUpdateProfileReducer,
+} from './Reducers/cltReducers'
 import { cartReducer } from './Reducers/cartReducers'
 
 //create Reducers
@@ -12,8 +17,13 @@ const reducer = combineReducers({
   //add reducers here exp
   productList: prdListReducer,
   productID: prdDetailsReducer,
+  //product
+  //client
   cltLogin: loginReducer,
   cltRegister: registerReducer,
+  cltDetails: userIdReducer,
+  cltUpdate: userUpdateProfileReducer,
+  //client
   cart: cartReducer,
 })
 

@@ -11,6 +11,7 @@ import {
   USER_UPDATE_PROFILE_FAIL,
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
+  USER_LOGOUT,
 } from '../Constants/cltConstants'
 import axios from 'axios'
 
@@ -136,6 +137,13 @@ export const UpdateUserId = (user) => async (dispatch, getState) => {
           : error.message,
     })
   }
+}
+
+export const logoutuser = () => (dispatch) => {
+  localStorage.removeItem('userInfo')
+  dispatch({
+    type: USER_LOGOUT,
+  })
 }
 
 //liste users
