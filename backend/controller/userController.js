@@ -2,15 +2,15 @@ const { pool } = require('../connectdb.js')
 const asyncHandler = require('express-async-handler')
 const { hashpassword, camparePassword } = require('../utils/hashpasword.js')
 const generatetoken = require('../utils/generatetoken.js')
-
+const bcrypt = require('bcrypt')
 //register user
 //status : done
 const registerUser = asyncHandler(async (req, res) => {
   try {
-    const { name, email, password } = req.body
+    const { name, email, password, isadmin } = req.body
 
     // Check if the user exists
-    let test = `SELECT id, name, email, password 
+    let test = `SELECT id, name, email, password, isadmin
     FROM "users" WHERE email = $1`
     const userExist = await pool.query(test, [email])
 
@@ -23,20 +23,22 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // Insert new user
     const insert = `
-      INSERT INTO "users" (name, email, password)
-      VALUES ($1, $2, $3)
+      INSERT INTO "users" (name, email, password, isadmin)
+      VALUES ($1, $2, $3, $4)
       RETURNING *;
     `
-    const values = [name, email, newpass]
+    const values = [name, email, newpass, isadmin]
     const rest = await pool.query(insert, values)
 
     const { id } = rest.rows[0]
 
     // Send  response
     res.status(201).json({
+      id,
       name,
       email,
       password,
+      isadmin,
       token: generatetoken(id),
     })
   } catch (error) {
@@ -47,22 +49,32 @@ const registerUser = asyncHandler(async (req, res) => {
 
 //login User
 //status : done
+
 const loginUser = asyncHandler(async (req, res) => {
   try {
-    const { email, password } = req.body
-    let test = 'SELECT id, name, email , password FROM "users" WHERE email = $1'
-    const rest = await pool.query(test, [email])
-    const user = rest.rows[0]
-    if (user && camparePassword(password, user.password)) {
+    const { email, password } = req.query
+
+    // Query user from the database
+    const query =
+      'SELECT id, name, email, password FROM "users" WHERE email = $1 '
+    const result = await pool.query(query, [email])
+    const user = result.rows[0]
+
+    let isMatch = await bcrypt.compareSync(password, user.password)
+
+    if (user && isMatch) {
       res.status(201).json({
         id: user.id,
         name: user.name,
         email: user.email,
-        token: generatetoken(user.id),
+        token: generatetoken(user.id), // Assuming `generatetoken` generates a JWT
       })
+    } else {
+      res.status(401).json({ message: 'Invalid email or password' })
     }
   } catch (error) {
     console.error(error.message)
+    res.status(500).json({ message: 'Internal Server Error' })
   }
 })
 
@@ -76,11 +88,35 @@ const getUserId = asyncHandler(async (req, res) => {
     const user = result.rows[0]
     user
       ? res.status(200).json({
+          id: user.id,
           name: user.name,
           email: user.email,
           password: user.password,
         })
       : res.status(400).json('user not found by his id')
+  } catch (error) {
+    console.log(error.message)
+  }
+})
+
+//update user by id
+//status : done
+const updatedUser = asyncHandler(async (req, res) => {
+  try {
+    let id = req.user.id
+    const { name, email, password } = req.body
+    const upd = `UPDATE "users" SET name=$1, email=$2, password=$3 where id = ${id} RETURNING  name, email, password;`
+    const vls = [name, email, hashpassword(password)]
+    const reslt = await pool.query(upd, vls)
+    reslt.rowCount === 0
+      ? res.status(400).json('some problem')
+      : res.status(201).json({
+          name: name,
+          email: email,
+          password: hashpassword(password),
+          token: generatetoken(id),
+        })
+    res.status(200).json({ msg: 'update user' })
   } catch (error) {
     console.log(error.message)
   }
@@ -99,28 +135,6 @@ const getAllUser = asyncHandler(async (req, res) => {
   }
 })
 
-//update user by id
-//status : done
-const updatedUser = asyncHandler(async (req, res) => {
-  try {
-    let id = req.params.id
-    const { name, email, password } = req.body
-    const upd = `UPDATE "users" SET name=$1, email=$2, password=$3 where id = ${id} RETURNING  name, email, password;`
-    const vls = [name, email, password]
-    const reslt = await pool.query(upd, vls)
-    reslt.rowCount === 0
-      ? res.status(400).json('some problem')
-      : res.status(201).json({
-          name: name,
-          email: email,
-          password: hashpassword(password),
-          token: generatetoken(id),
-        })
-    res.send('update user')
-  } catch (error) {
-    console.log(error.message)
-  }
-})
 //delete user
 //status : done
 const deleteUser = asyncHandler(async (req, res) => {
