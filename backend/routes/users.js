@@ -18,9 +18,9 @@ const {
 const protect = require('../middelware/authMiddel')
 
 router.post('/register', registerUser)
-router.post('/auth', loginUser)
+router.get('/auth', loginUser)
 // add admin middel ******
-router.get('/all', protect, getAllUser)
+router.get('/all', getAllUser)
 router.get('/:id', protect, getUserId)
 router.put('/update/:id', protect, updatedUser)
 router.delete('/delete/:id', deleteUser)

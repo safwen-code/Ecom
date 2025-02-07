@@ -56,7 +56,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     // Query user from the database
     const query =
-      'SELECT id, name, email, password FROM "users" WHERE email = $1 '
+      'SELECT id, name, email, password, isadmin FROM "users" WHERE email = $1 '
     const result = await pool.query(query, [email])
     const user = result.rows[0]
 
@@ -67,6 +67,7 @@ const loginUser = asyncHandler(async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
+        isadmin: user.isadmin,
         token: generatetoken(user.id), // Assuming `generatetoken` generates a JWT
       })
     } else {
@@ -92,6 +93,7 @@ const getUserId = asyncHandler(async (req, res) => {
           name: user.name,
           email: user.email,
           password: user.password,
+          isadmin: user.isadmin,
         })
       : res.status(400).json('user not found by his id')
   } catch (error) {

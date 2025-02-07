@@ -16,7 +16,7 @@ const upload = require('../middelware/uploadMiddel')
 router.post('/addproduct', protect, upload.single('image'), addProduct)
 
 //get all products
-router.get('/allProducts', protect, allProducts)
+router.get('/allProducts', allProducts)
 
 //get product
 router.get('/:id', protect, getProduct)
