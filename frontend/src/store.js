@@ -7,8 +7,10 @@ import { prdDetailsReducer, prdListReducer } from './Reducers/prdReducers'
 import {
   loginReducer,
   registerReducer,
+  userDeleteReducer,
   userIdReducer,
   userUpdateProfileReducer,
+  usersList,
 } from './Reducers/cltReducers'
 import { cartReducer } from './Reducers/cartReducers'
 
@@ -25,6 +27,9 @@ const reducer = combineReducers({
   cltUpdate: userUpdateProfileReducer,
   //client
   cart: cartReducer,
+  //admin Part
+  usersList,
+  userdelete: userDeleteReducer,
 })
 
 //get some storage data

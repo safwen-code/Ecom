@@ -112,7 +112,7 @@ const Login = () => {
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link
-                //   to={redirect ? `/register?redirect=${redirect}` : '/register'}
+                to={redirect ? `/register?redirect=${redirect}` : '/register'}
                 variant="body2"
                 style={{ cursor: 'pointer' }}
               >

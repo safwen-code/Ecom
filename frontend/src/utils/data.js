@@ -30,10 +30,7 @@ const products = [
     brand: 'Brand A',
     category: 'Category A',
     description: 'High-quality camera',
-    reviews: [
-      { _id: '1', name: 'John Doe', rating: 5, comment: 'Amazing product!' },
-      { _id: '2', name: 'Jane Doe', rating: 4, comment: 'Very good quality!' },
-    ],
+    reviews: [],
     rating: 4.5,
     numReviews: 2,
     price: 99.99,
@@ -59,10 +56,7 @@ const products = [
     brand: 'Brand B',
     category: 'Category B',
     description: 'High-quality phone',
-    reviews: [
-      { _id: '1', name: 'John Doe', rating: 5, comment: 'Amazing product!' },
-      { _id: '2', name: 'Jane Doe', rating: 4, comment: 'Very good quality!' },
-    ],
+    reviews: [],
     rating: 2.5,
     numReviews: 2,
     price: 149.99,

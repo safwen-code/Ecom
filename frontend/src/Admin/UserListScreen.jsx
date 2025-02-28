@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Message from '../layout/Message'
 import Loader from '../layout/Loader'
 import {
@@ -20,16 +20,32 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 import { users } from '../utils/data'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { deleteUser, listUsers } from '../Actions/cltActions'
 
 const UserListScreen = () => {
-  const loading = false
-  const error = false
-  const usersList = users
+  const dispatch = useDispatch()
 
+  const cltLogin = useSelector((state) => state.cltLogin)
+  const { userInfo } = cltLogin
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (userInfo && userInfo.isadmin) {
+      dispatch(listUsers())
+    } else {
+      navigate('/login')
+    }
+  }, [userInfo, navigate, dispatch])
+
+  const usersList = useSelector((state) => state.usersList)
+  const { loading, error, users } = usersList
   const deleteHandler = (id) => {
+    console.log(id)
     if (window.confirm('Are you sure')) {
-      //delete Users
+      dispatch(deleteUser(id))
+      dispatch(listUsers())
     }
   }
   return (
@@ -59,15 +75,15 @@ const UserListScreen = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {usersList.map((user) => (
-                    <TableRow key={user._id}>
-                      <TableCell>{user._id}</TableCell>
+                  {users.map((user) => (
+                    <TableRow key={user.id}>
+                      <TableCell>{user.id}</TableCell>
                       <TableCell>{user.name}</TableCell>
                       <TableCell>
                         <a href={`mailto:${user.email}`}>{user.email}</a>
                       </TableCell>
                       <TableCell>
-                        {user.isAdmin ? (
+                        {user.isadmin ? (
                           <CheckCircleIcon sx={{ color: 'green' }} />
                         ) : (
                           <HighlightOffIcon sx={{ color: 'red' }} />
@@ -83,7 +99,7 @@ const UserListScreen = () => {
                         </IconButton>
                         <IconButton
                           color="error"
-                          onClick={() => deleteHandler(user._id)}
+                          onClick={() => deleteHandler(user.id)}
                         >
                           <DeleteIcon />
                         </IconButton>

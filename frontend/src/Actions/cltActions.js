@@ -12,6 +12,12 @@ import {
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
   USER_LOGOUT,
+  LIST_ALL_USERS_REQUEST,
+  LIST_ALL_USERS_SUCCESS,
+  LIST_ALL_USERS_FAIL,
+  USER_DELETE_REQUEST,
+  USER_DELETE_SUCCESS,
+  USER_DELETE_FAIL,
 } from '../Constants/cltConstants'
 import axios from 'axios'
 
@@ -147,5 +153,63 @@ export const logoutuser = () => (dispatch) => {
 }
 
 //liste users
+export const listUsers = () => async (dispatch, getState) => {
+  try {
+    const {
+      cltLogin: { userInfo },
+    } = getState()
+
+    if (!userInfo || !userInfo.token) {
+      throw new Error('No authorization token available')
+    }
+
+    const token = userInfo.token
+
+    dispatch({ type: LIST_ALL_USERS_REQUEST })
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+    const { data } = await axios.get(`/api/users/all`, config)
+    dispatch({ type: LIST_ALL_USERS_SUCCESS, payload: data })
+  } catch (error) {
+    dispatch({
+      type: LIST_ALL_USERS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
 //delete user
+export const deleteUser = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_DELETE_REQUEST,
+    })
+    const {
+      cltLogin: { userInfo },
+    } = getState()
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+    const { data } = await axios.delete(`/api/users/delete/${id}`, config)
+    dispatch({
+      type: USER_DELETE_SUCCESS,
+      payload: data.payload,
+    })
+  } catch (error) {
+    dispatch({
+      type: USER_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
 //update user

@@ -6,7 +6,6 @@ import {
   PRODUCT_LIST_REQUEST,
   PRODUCT_LIST_SUCCESS,
 } from '../Constants/prdConstants'
-import { products } from '../utils/data'
 import axios from 'axios'
 //all prd
 export const diplayProducts = () => async (dispatch) => {
@@ -16,7 +15,7 @@ export const diplayProducts = () => async (dispatch) => {
     console.log(data)
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
-      payload: products,
+      payload: data,
     })
   } catch (error) {
     dispatch({
@@ -28,17 +27,18 @@ export const diplayProducts = () => async (dispatch) => {
 
 //prd by id
 export const displayProductby = (id) => async (dispatch) => {
-  try {
-    dispatch({ type: PRODUCT_DETAILS_REQUEST })
-    const prd = products.find((el) => el._id === id)
+  console.log(id)
+  // try {
+  //   dispatch({ type: PRODUCT_DETAILS_REQUEST })
+  //   const prd = products.find((el) => el._id === id)
 
-    if (prd) {
-      dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: prd })
-    }
-  } catch (error) {
-    dispatch({
-      type: PRODUCT_DETAILS_FAIL,
-      payload: 'no data',
-    })
-  }
+  //   if (prd) {
+  //     dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: prd })
+  //   }
+  // } catch (error) {
+  //   dispatch({
+  //     type: PRODUCT_DETAILS_FAIL,
+  //     payload: 'no data',
+  //   })
+  // }
 }

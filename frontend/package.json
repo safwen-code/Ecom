@@ -1,5 +1,6 @@
 {
   "name": "frontend",
+  "proxy": "http://127.0.0.1:5000",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,6 +9,7 @@
     "@mui/icons-material": "^6.2.0",
     "@mui/material": "^6.2.0",
     "@redux-devtools/extension": "^3.3.0",
+    "axios": "^1.7.9",
     "cra-template": "1.2.0",
     "framer-motion": "^11.15.0",
     "react": "^19.0.0",

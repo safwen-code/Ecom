@@ -170,7 +170,7 @@ const Navbar = () => {
                 </Link>
               </MenuItem>
             )}
-            {userInfo && userInfo.isAdmin && (
+            {userInfo && userInfo.isadmin && (
               <>
                 <Menu
                   sx={{ mt: '45px' }}
