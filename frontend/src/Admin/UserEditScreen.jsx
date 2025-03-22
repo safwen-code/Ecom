@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
-
-import { Link, useParams } from 'react-router-dom'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import Message from '../layout/Message'
 import Loader from '../layout/Loader'
-
 import {
   Container,
   TextField,
@@ -14,30 +12,42 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material'
-
-import { users } from '../utils/data'
+import { GetUserId } from '../Actions/cltActions.js'
+import { USER_UPDATE_PROFILE_RESET } from '../Constants/cltConstants.js'
 
 const UserEditScreen = () => {
   const { id } = useParams()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  // Local state for form fields
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [isAdmin, setIsAdmin] = useState(false)
 
-  const loading = false
-  const error = false
-  const user = users.find((user) => user._id === id)
+  // Get user details from Redux state
+  const cltDetails = useSelector((state) => state.cltDetails)
+  const { loading, user, error } = cltDetails
+
+  const cltUpdate = useSelector((state) => state.cltUpdate)
+  const { success: successUpdate } = cltUpdate
+
+  useEffect(() => {
+    dispatch(GetUserId(id))
+  }, [dispatch, id])
 
   useEffect(() => {
     if (user) {
       setName(user.name)
       setEmail(user.email)
-      setIsAdmin(user.isAdmin)
+      setIsAdmin(user.isadmin)
     }
   }, [user])
 
   const submitHandler = (e) => {
     e.preventDefault()
-    //update user
+    console.log('Submitting:', { name, email, isAdmin })
+    // Update user logic here
   }
 
   return (
