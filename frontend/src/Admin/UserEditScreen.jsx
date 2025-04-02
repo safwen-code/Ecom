@@ -12,7 +12,11 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material'
-import { GetUserId } from '../Actions/cltActions.js'
+import {
+  GetUserId,
+  updateUserAdmin,
+  UpdateUserId,
+} from '../Actions/cltActions.js'
 import { USER_UPDATE_PROFILE_RESET } from '../Constants/cltConstants.js'
 
 const UserEditScreen = () => {
@@ -23,31 +27,38 @@ const UserEditScreen = () => {
   // Local state for form fields
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [password, setPassword] = useState('')
+  const [isadmin, setIsAdmin] = useState(false)
 
   // Get user details from Redux state
   const cltDetails = useSelector((state) => state.cltDetails)
   const { loading, user, error } = cltDetails
 
   const cltUpdate = useSelector((state) => state.cltUpdate)
-  const { success: successUpdate } = cltUpdate
+  const { success } = cltUpdate
 
   useEffect(() => {
     dispatch(GetUserId(id))
   }, [dispatch, id])
 
   useEffect(() => {
+    if (success) {
+      dispatch({ type: USER_UPDATE_PROFILE_RESET })
+      navigate('/admin/userList')
+    }
     if (user) {
       setName(user.name)
       setEmail(user.email)
+      setPassword(user.password)
       setIsAdmin(user.isadmin)
     }
-  }, [user])
+  }, [user, success, navigate, dispatch])
 
   const submitHandler = (e) => {
     e.preventDefault()
-    console.log('Submitting:', { name, email, isAdmin })
+    // console.log('Submitting:', { id, name, email, isadmin })
     // Update user logic here
+    dispatch(updateUserAdmin({ id, name, email, password, isadmin }))
   }
 
   return (
@@ -102,10 +113,21 @@ const UserEditScreen = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="password"
+              label="password "
+              name="password"
+              autoComplete="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={isAdmin}
+                  checked={isadmin}
                   onChange={(e) => setIsAdmin(e.target.checked)}
                   color="primary"
                 />
