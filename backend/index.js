@@ -1,5 +1,7 @@
 const express = require('express')
+const serveIndex = require('serve-index')
 
+const path = require('path')
 const app = express()
 const { ConnectionDb, pool } = require('./connectdb')
 
@@ -21,7 +23,8 @@ app.use('/api/users', users)
 app.use('/api/products', products)
 
 // get access to folder upload
-app.use('/uploads', express.static('uploads'))
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
+app.use('/uploads', serveIndex(path.join(__dirname, '../uploads')))
 
 // ********** Start Server **********
 app.listen(5000, () => {
