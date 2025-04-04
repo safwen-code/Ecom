@@ -47,7 +47,7 @@ const ProductListScreen = () => {
 
   const [open, setOpen] = useState(false)
   const [productData, setProductData] = useState({
-    user_id: '',
+    user_id: userInfo.id,
     name: '',
     category: '',
     description: '',
@@ -81,7 +81,6 @@ const ProductListScreen = () => {
   const handleClose = () => {
     setOpen(false)
     setProductData({
-      user_id: '',
       name: '',
       category: '',
       description: '',
@@ -97,6 +96,7 @@ const ProductListScreen = () => {
 
   const handleSubmit = () => {
     const formData = new FormData()
+    formData.append('user_id', productData.user_id)
     formData.append('name', productData.name)
     formData.append('category', productData.category)
     formData.append('description', productData.description)
@@ -106,6 +106,7 @@ const ProductListScreen = () => {
     formData.append('image', productData.image)
 
     dispatch(addproduct(formData))
+
     handleClose()
   }
 
@@ -154,7 +155,7 @@ const ProductListScreen = () => {
                 <CardContent>
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Avatar
-                      src={product.image}
+                      src={`../../${product.image}`}
                       alt={product.name}
                       variant="rounded"
                       sx={{ width: 56, height: 56 }}
