@@ -21,6 +21,7 @@ const addProduct = asynchandler(async (req, res) => {
     if (!req.file) {
       res.status(404).json('no file uploads')
     }
+    console.log(req.file)
     //add filename to uploads doc
     const filename = req.file.filename
     const imagePath = path.join('uploads', filename)
@@ -28,12 +29,13 @@ const addProduct = asynchandler(async (req, res) => {
     // Extract product details from the request body
     const {
       name,
-      price,
       category,
+      description,
+      price,
       countInStock,
       numReviews,
-      description,
     } = req.body
+    console.log(req.body)
 
     // Validate required fields
     if (!name || !price || !imagePath || !category || !description) {
@@ -85,9 +87,16 @@ const allProducts = asynchandler(async (req, res) => {
     let query = `SELECT * FROM "products" `
     //get from pool
     const result = await pool.query(query)
+    const newRes = result.rows.map((product) => {
+      const newImg = product.image.replace(/\\/g, '/')
+      return {
+        ...product,
+        image: `${req.protocol}://${req.get('host')}/${newImg}`,
+      }
+    })
     result.rowCount === 0
       ? res.status(404).json('no Porduct add some data')
-      : res.status(200).json(result.rows)
+      : res.status(200).json(newRes)
   } catch (error) {
     console.log(error)
     res.status(500).json('message error')
