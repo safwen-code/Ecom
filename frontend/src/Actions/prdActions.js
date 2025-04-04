@@ -1,10 +1,10 @@
 import {
-  PRODUCT_DETAILS_FAIL,
-  PRODUCT_DETAILS_REQUEST,
-  PRODUCT_DETAILS_SUCCESS,
   PRODUCT_LIST_FAIL,
   PRODUCT_LIST_REQUEST,
   PRODUCT_LIST_SUCCESS,
+  ADD_PRODUCT_FAIL,
+  ADD_PRODUCT_REQUEST,
+  ADD_PRODUCT_SUCCESS,
 } from '../Constants/prdConstants'
 import axios from 'axios'
 //all prd
@@ -20,7 +20,43 @@ export const diplayProducts = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: PRODUCT_LIST_FAIL,
-      payload: 'no data',
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+//addproduct
+export const addproduct = (formData) => async (dispatch, getState) => {
+  console.log('from prd act', formData)
+  try {
+    dispatch({
+      type: ADD_PRODUCT_REQUEST,
+    })
+    const {
+      cltLogin: { userInfo },
+    } = getState()
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+    const { data } = await axios.post(
+      `/api/products/addproduct`,
+      formData,
+      config,
+    )
+    dispatch({ type: ADD_PRODUCT_SUCCESS, payload: data })
+  } catch (error) {
+    dispatch({
+      type: ADD_PRODUCT_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     })
   }
 }
