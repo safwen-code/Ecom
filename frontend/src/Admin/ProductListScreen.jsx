@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import Message from '../layout/Message'
 import Loader from '../layout/Loader'
 import {
@@ -30,9 +30,12 @@ import {
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
-import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { addproduct, diplayProducts } from '../Actions/prdActions.js'
+import {
+  addproduct,
+  diplayProducts,
+  editproduct,
+} from '../Actions/prdActions.js'
 import { useNavigate } from 'react-router-dom'
 import { ADD_PRODUCT_REQUEST } from '../Constants/prdConstants.js'
 import ProductEditScreen from './ProductEditScreen.jsx'
@@ -74,10 +77,11 @@ const ProductListScreen = () => {
     setEditOpen(true)
   }
 
+  const updateProduct = useSelector((state) => state.updateProduct)
+  const { success } = updateProduct
   const handleUpdateProduct = (updatedProduct) => {
-    // dispatch(updateProduct(updatedProduct))
-
-    console.log('Updated Product:', updatedProduct)
+    dispatch(editproduct(updatedProduct))
+    // console.log('Updated Product:', updatedProduct)
   }
 
   useEffect(() => {
@@ -163,7 +167,7 @@ const ProductListScreen = () => {
           </Button>
         </Grid>
       </Grid>
-
+      {success && <Message variant="success" children="Product Updated" />}
       {loading ? (
         <Loader />
       ) : error ? (
@@ -260,7 +264,6 @@ const ProductListScreen = () => {
           </Table>
         </TableContainer>
       )}
-
       {/* Modal for Adding Product */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle>Add New Product</DialogTitle>
