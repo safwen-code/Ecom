@@ -24,7 +24,7 @@ const isAdmin = asyncHandler(async (req, res, next) => {
       req.user = result.rows[0]
       req.user.isadmin = true && next()
     } else {
-      return res.status(401).json({ message: 'No token provided' })
+      return res.status(401).json({ message: 'No token provided admin part' })
     }
   } catch (error) {
     console.error('Error verifying token:', error.message)

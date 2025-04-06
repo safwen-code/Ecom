@@ -119,7 +119,7 @@ export const UpdateUserId = (user) => async (dispatch, getState) => {
           Authorization: `Bearer ${token}`,
         },
       }
-
+      console.log(user)
       if (user) {
         const { data } = await axios.put(
           `/api/users/update/${user.id}`,
@@ -183,6 +183,7 @@ export const listUsers = () => async (dispatch, getState) => {
     })
   }
 }
+
 //delete user
 export const deleteUser = (id) => async (dispatch, getState) => {
   try {
@@ -212,4 +213,44 @@ export const deleteUser = (id) => async (dispatch, getState) => {
     })
   }
 }
-//update user
+
+//update user by admin
+export const updateUserAdmin = (user) => async (dispatch, getState) => {
+  try {
+    const {
+      cltLogin: { userInfo },
+    } = getState()
+
+    if (!userInfo || !userInfo.token) {
+      console.log('no token exist')
+    } else {
+      const token = userInfo.token
+      dispatch({ type: USER_UPDATE_PROFILE_REQUEST })
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+      console.log(user)
+      if (user) {
+        const { data } = await axios.put(
+          `/api/users/updateuser/${user.id}`,
+          user,
+          config,
+        )
+
+        dispatch({ type: USER_UPDATE_PROFILE_SUCCESS, payload: data })
+      }
+    }
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_PROFILE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}

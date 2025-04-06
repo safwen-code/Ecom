@@ -38,10 +38,7 @@ const App = () => {
               element={<ProductListScreen />}
               exact
             />
-            <Route
-              path="/admin/product/:id/edit"
-              element={<ProductEditeScreen />}
-            />
+
             <Route path="/admin/userlist" element={<UserListScreen />} />
             <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
 

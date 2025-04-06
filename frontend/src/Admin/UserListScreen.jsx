@@ -44,8 +44,8 @@ const UserListScreen = () => {
   const deleteHandler = (id) => {
     console.log(id)
     if (window.confirm('Are you sure')) {
-      dispatch(deleteUser(id))
       dispatch(listUsers())
+      dispatch(deleteUser(id))
     }
   }
   return (
@@ -92,7 +92,7 @@ const UserListScreen = () => {
                       <TableCell align="right">
                         <IconButton
                           component={Link}
-                          to={`/admin/user/${user._id}/edit`}
+                          to={`/admin/user/${user.id}/edit`}
                           color="primary"
                         >
                           <EditIcon />

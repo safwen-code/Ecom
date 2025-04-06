@@ -13,6 +13,7 @@ const {
   getUserId,
   updatedUser,
   deleteUser,
+  updatedUserAdmin,
 } = require('../controller/userController')
 
 const protect = require('../middelware/authMiddel')
@@ -23,8 +24,9 @@ router.get('/auth', loginUser)
 // add admin middel ******
 router.get('/all', isAdmin, getAllUser)
 router.get('/:id', protect, getUserId)
-router.put('/update/:id', protect, updatedUser)
-router.delete('/delete/:id', deleteUser)
+router.put('/update/:id', isAdmin, protect, updatedUser)
+router.put('/updateuser/:id', isAdmin, updatedUserAdmin)
+router.delete('/delete/:id', isAdmin, protect, deleteUser)
 // add admin middel ******
 
 module.exports = router

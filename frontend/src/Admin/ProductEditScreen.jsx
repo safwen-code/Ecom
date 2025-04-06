@@ -1,191 +1,128 @@
+// components/ProductEditScreen.jsx
 import React, { useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import Message from '../layout/Message'
-import Loader from '../layout/Loader'
-import { Container, TextField, Typography, Box, Button } from '@mui/material'
-import { products } from '../utils/data'
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Grid,
+  TextField,
+  Button,
+  Box,
+  Typography,
+} from '@mui/material'
 
-const ProductEditeScreen = () => {
-  const { id } = useParams()
-  const [name, setName] = useState('')
-  const [price, setprice] = useState(0)
-  const [image, setimage] = useState('')
-  const [brand, setbrand] = useState('')
-  const [category, setcategory] = useState('')
-  const [countInStock, setcountInStock] = useState(0)
-  const [description, setdescription] = useState('')
-  const [uploading, setuploading] = useState(false)
-
-  const loading = false
-  const error = false
-  const product = products.find((product) => product._id === id)
+const ProductEditScreen = ({ open, handleClose, product, handleUpdate }) => {
+  const [editedProduct, setEditedProduct] = useState(product || {})
+  const [preview, setPreview] = useState(null)
 
   useEffect(() => {
-    if (product) {
-      setName(product.name)
-      setprice(product.price)
-      setimage(product.image)
-      setbrand(product.brand)
-      setcategory(product.category)
-      setcountInStock(product.counsetcountInStock)
-      setdescription(product.description)
+    setEditedProduct(product)
+    if (product?.image) {
+      setPreview(product.image)
     }
   }, [product])
 
-  const submitHandler = (e) => {
-    e.preventDefault()
-    //update product
+  const handleChange = (e) => {
+    setEditedProduct({ ...editedProduct, [e.target.name]: e.target.value })
   }
-  const uploadFileHandler = async (e) => {
-    // const file = e.target.files
-    // const formData = new FormData()
-    // formData.append('image', file[0])
-    // setuploading(true)
-    // try {
-    //   const config = {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //   }
-    //   const { data } = await axios.post('/api/upload', formData, config)
-    //   setimage(data)
-    //   setuploading(false)
-    // } catch (error) {
-    //   console.error(error)
-    //   setuploading(false)
-    // }
-    //upload file
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    setEditedProduct({ ...editedProduct, image: file })
+    setPreview(URL.createObjectURL(file))
+  }
+
+  const submitHandler = () => {
+    handleUpdate(editedProduct)
+    handleClose()
   }
 
   return (
-    <Container maxWidth="sm">
-      <Button
-        component={Link}
-        to="/admin/productlist"
-        variant="contained"
-        color="primary"
-      >
-        Go Back
-      </Button>
-      <Box
-        component="form"
-        onSubmit={submitHandler}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          mt: 8,
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Edit Product
-        </Typography>
-        {loading ? (
-          <Loader />
-        ) : error ? (
-          <Message variant="error">{error}</Message>
-        ) : product ? (
-          <>
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+      <DialogTitle>Edit Product</DialogTitle>
+      <DialogContent>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
             <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              label="Name"
+              label="Product Name"
               name="name"
-              autoComplete="name"
-              autoFocus
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <TextField
-              margin="normal"
-              required
               fullWidth
-              id="email"
+              size="small"
+              value={editedProduct?.name || ''}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
               label="Price"
-              name="email"
-              autoComplete="email"
-              value={price}
-              onChange={(e) => setprice(e.target.value)}
-            />
-            <>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Image"
-                name="image"
-                autoComplete="email"
-                value={image}
-                onChange={(e) => setimage(e.target.value)}
-              />
-              <Button variant="contained" component="label" color="primary">
-                Choose File
-                <input type="file" hidden onChange={uploadFileHandler} />
-              </Button>
-              {uploading && <Loader />}
-            </>
-            <TextField
-              margin="normal"
-              required
+              name="price"
+              type="number"
               fullWidth
-              id="email"
-              label="brand"
-              name="brand"
-              autoComplete="email"
-              value={brand}
-              onChange={(e) => setbrand(e.target.value)}
+              size="small"
+              value={editedProduct?.price || ''}
+              onChange={handleChange}
             />
+          </Grid>
+          <Grid item xs={6}>
             <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="count in stock"
-              name="count"
-              autoComplete="email"
-              value={countInStock}
-              onChange={(e) => setcountInStock(e.target.value)}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="category"
+              label="Category"
               name="category"
-              autoComplete="email"
-              value={category}
-              onChange={(e) => setcategory(e.target.value)}
+              fullWidth
+              size="small"
+              value={editedProduct?.category || ''}
+              onChange={handleChange}
             />
+          </Grid>
+          <Grid item xs={12}>
             <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="description"
+              label="Description"
               name="description"
-              autoComplete="email"
-              value={description}
-              onChange={(e) => setdescription(e.target.value)}
-            />
-            <Button
-              type="submit"
+              multiline
+              rows={3}
               fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Edit product
+              size="small"
+              value={editedProduct?.description || ''}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button variant="outlined" component="label" fullWidth>
+              Upload Product Image
+              <input
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={handleFileChange}
+              />
             </Button>
-          </>
-        ) : (
-          <Message variant="error">product not found</Message>
-        )}
-      </Box>
-    </Container>
+          </Grid>
+          {preview && (
+            <Grid item xs={12} textAlign="center">
+              <Typography variant="body2" sx={{ mt: 1 }}>
+                Image Preview
+              </Typography>
+              <Box mt={1}>
+                <img
+                  src={preview}
+                  alt="Preview"
+                  style={{ width: '100px', borderRadius: '5px' }}
+                />
+              </Box>
+            </Grid>
+          )}
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="secondary">
+          Cancel
+        </Button>
+        <Button onClick={submitHandler} color="primary" variant="contained">
+          Save Changes
+        </Button>
+      </DialogActions>
+    </Dialog>
   )
 }
 
-export default ProductEditeScreen
+export default ProductEditScreen

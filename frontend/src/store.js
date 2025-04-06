@@ -3,7 +3,13 @@ import { thunk } from 'redux-thunk'
 import { composeWithDevTools } from '@redux-devtools/extension'
 
 //import reducers
-import { prdDetailsReducer, prdListReducer } from './Reducers/prdReducers'
+import {
+  prdDetailsReducer,
+  prdListReducer,
+  addProductReducer,
+  EditeProductReducer,
+  deleteProductReducer,
+} from './Reducers/prdReducers'
 import {
   loginReducer,
   registerReducer,
@@ -30,6 +36,9 @@ const reducer = combineReducers({
   //admin Part
   usersList,
   userdelete: userDeleteReducer,
+  addProduct: addProductReducer,
+  updateProduct: EditeProductReducer,
+  deleteProduct: deleteProductReducer,
 })
 
 //get some storage data

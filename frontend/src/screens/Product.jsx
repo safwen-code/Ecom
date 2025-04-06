@@ -65,7 +65,7 @@ const Product = ({ product }) => {
                     objectFit: 'cover',
                     borderRadius: '8px',
                   }}
-                  image={product.image || '/path/to/default/image.jpg'}
+                  image={product.image || `uploads\\ ${product.image}`}
                   alt={product.name}
                 />
               </motion.div>

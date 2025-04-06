@@ -8,7 +8,6 @@ const bcrypt = require('bcrypt')
 const registerUser = asyncHandler(async (req, res) => {
   try {
     const { name, email, password, isadmin } = req.body
-
     // Check if the user exists
     let test = `SELECT id, name, email, password, isadmin
     FROM "users" WHERE email = $1`
@@ -52,8 +51,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   try {
-    const { email, password } = req.query
-
+    const { email, password } = req.body
+    console.log(req.body)
     // Query user from the database
     const query =
       'SELECT id, name, email, password, isadmin FROM "users" WHERE email = $1 '
@@ -92,7 +91,7 @@ const getUserId = asyncHandler(async (req, res) => {
           id: user.id,
           name: user.name,
           email: user.email,
-          password: user.password,
+          // password: user.password,
           isadmin: user.isadmin,
         })
       : res.status(400).json('user not found by his id')
@@ -106,6 +105,7 @@ const getUserId = asyncHandler(async (req, res) => {
 const updatedUser = asyncHandler(async (req, res) => {
   try {
     let id = req.user.id
+    let iduser = req.params.id
     const { name, email, password } = req.body
     const upd = `UPDATE "users" SET name=$1, email=$2, password=$3 where id = ${id} RETURNING  name, email, password;`
     const vls = [name, email, hashpassword(password)]
@@ -124,6 +124,26 @@ const updatedUser = asyncHandler(async (req, res) => {
   }
 })
 
+//update user by admin
+const updatedUserAdmin = asyncHandler(async (req, res) => {
+  try {
+    let iduser = req.params.id
+    const { name, email, password, isadmin } = req.body
+    const upd = `UPDATE "users" SET name=$1, email=$2, password=$3, isAdmin=$4 where id = ${iduser} RETURNING  name, email, password, isAdmin;`
+    const vls = [name, email, hashpassword(password), isadmin]
+    const reslt = await pool.query(upd, vls)
+    reslt.rowCount === 0
+      ? res.status(400).json('some problem')
+      : res.status(201).json({
+          name: name,
+          email: email,
+          password: hashpassword(password),
+        })
+    res.status(200).json({ msg: 'user updated' })
+  } catch (error) {
+    console.log(error.message)
+  }
+})
 //display users
 //status : done
 const getAllUser = asyncHandler(async (req, res) => {
@@ -162,4 +182,5 @@ module.exports = {
   getAllUser,
   updatedUser,
   deleteUser,
+  updatedUserAdmin,
 }

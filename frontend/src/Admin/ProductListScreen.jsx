@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react'
+import React, { useState, useEffect } from 'react'
 import Message from '../layout/Message'
 import Loader from '../layout/Loader'
 import {
@@ -33,6 +33,7 @@ import AddIcon from '@mui/icons-material/Add'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   addproduct,
+  deleteproduct,
   diplayProducts,
   editproduct,
 } from '../Actions/prdActions.js'
@@ -96,6 +97,7 @@ const ProductListScreen = () => {
   const deleteHandler = (id) => {
     if (window.confirm('Are you sure?')) {
       // Delete product logic here
+      dispatch(deleteproduct(id))
     }
   }
 
@@ -204,7 +206,7 @@ const ProductListScreen = () => {
                   </IconButton>
                   <IconButton
                     color="error"
-                    onClick={() => deleteHandler(product._id)}
+                    onClick={() => deleteHandler(product.id)}
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -253,7 +255,7 @@ const ProductListScreen = () => {
 
                     <IconButton
                       color="error"
-                      onClick={() => deleteHandler(product._id)}
+                      onClick={() => deleteHandler(product.id)}
                     >
                       <DeleteIcon />
                     </IconButton>
