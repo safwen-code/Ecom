@@ -35,16 +35,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addproduct, diplayProducts } from '../Actions/prdActions.js'
 import { useNavigate } from 'react-router-dom'
 import { ADD_PRODUCT_REQUEST } from '../Constants/prdConstants.js'
+import ProductEditScreen from './ProductEditScreen.jsx'
 
 const ProductListScreen = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  //data rdx
   const productList = useSelector((state) => state.productList)
   const { loading, products, error } = productList
 
   const cltLogin = useSelector((state) => state.cltLogin)
   const { userInfo } = cltLogin
-  const navigate = useNavigate()
 
+  //modal add
   const [open, setOpen] = useState(false)
   const [productData, setProductData] = useState({
     user_id: userInfo.id,
@@ -57,7 +61,24 @@ const ProductListScreen = () => {
     count_in_stock: '',
     image: null,
   })
+
+  //get image
   const [preview, setPreview] = useState(null)
+
+  //edite prd work
+  const [editOpen, setEditOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState(null)
+
+  const handleEditClick = (product) => {
+    setSelectedProduct(product)
+    setEditOpen(true)
+  }
+
+  const handleUpdateProduct = (updatedProduct) => {
+    // dispatch(updateProduct(updatedProduct))
+
+    console.log('Updated Product:', updatedProduct)
+  }
 
   useEffect(() => {
     if (!userInfo || !userInfo.isadmin) {
@@ -172,8 +193,7 @@ const ProductListScreen = () => {
                 </CardContent>
                 <CardActions sx={{ justifyContent: 'flex-end' }}>
                   <IconButton
-                    component={Link}
-                    to={`/admin/product/${product._id}/edit`}
+                    onClick={() => handleEditClick(product)}
                     color="primary"
                   >
                     <EditIcon />
@@ -221,12 +241,12 @@ const ProductListScreen = () => {
                   <TableCell>{product.brand}</TableCell>
                   <TableCell align="right">
                     <IconButton
-                      component={Link}
-                      to={`/admin/product/${product._id}/edit`}
+                      onClick={() => handleEditClick(product)}
                       color="primary"
                     >
                       <EditIcon />
                     </IconButton>
+
                     <IconButton
                       color="error"
                       onClick={() => deleteHandler(product._id)}
@@ -382,6 +402,13 @@ const ProductListScreen = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {/* call edit modal */}
+      <ProductEditScreen
+        open={editOpen}
+        handleClose={() => setEditOpen(false)}
+        product={selectedProduct}
+        handleUpdate={handleUpdateProduct}
+      />
     </Box>
   )
 }
