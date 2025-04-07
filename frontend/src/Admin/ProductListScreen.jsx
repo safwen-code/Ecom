@@ -79,11 +79,18 @@ const ProductListScreen = () => {
   }
 
   const updateProduct = useSelector((state) => state.updateProduct)
-  const { success } = updateProduct
+  const { success: successEdit } = updateProduct
+
   const handleUpdateProduct = (updatedProduct) => {
     dispatch(editproduct(updatedProduct))
     // console.log('Updated Product:', updatedProduct)
   }
+
+  const addProduct = useSelector((state) => state.addProduct)
+  const { success: successAdd } = addProduct
+
+  const deleteProduct = useSelector((state) => state.deleteProduct)
+  const { success: successDelete } = deleteProduct
 
   useEffect(() => {
     if (!userInfo || !userInfo.isadmin) {
@@ -92,7 +99,7 @@ const ProductListScreen = () => {
       dispatch(diplayProducts())
     }
     dispatch({ type: ADD_PRODUCT_REQUEST })
-  }, [dispatch, userInfo, navigate])
+  }, [dispatch, userInfo, navigate, successAdd, successDelete, successEdit])
 
   const deleteHandler = (id) => {
     if (window.confirm('Are you sure?')) {
@@ -169,7 +176,7 @@ const ProductListScreen = () => {
           </Button>
         </Grid>
       </Grid>
-      {success && <Message variant="success" children="Product Updated" />}
+      {successEdit && <Message variant="success" children="Product Updated" />}
       {loading ? (
         <Loader />
       ) : error ? (
