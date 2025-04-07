@@ -97,7 +97,11 @@ const ProductScreen = () => {
                 <Card elevation={6}>
                   <CardMedia
                     sx={{ height: 300 }}
-                    image={product.image}
+                    image={
+                      product.image
+                        ? `../../${product.image.replace(/\\/g, '/')}`
+                        : null
+                    }
                     title={product.name}
                   />
                   <Box display="flex" justifyContent="center" mt={2}>
@@ -132,7 +136,7 @@ const ProductScreen = () => {
                       precision={0.5}
                     />
                     <Typography sx={{ ml: 2 }}>
-                      {product.numReviews} reviews
+                      {product.num_reviews} reviews
                     </Typography>
                   </Box>
                   <Typography sx={{ mt: 2, fontWeight: 'bold' }}>
@@ -150,9 +154,9 @@ const ProductScreen = () => {
                   <Divider sx={{ my: 2 }} />
                   <Typography>
                     Status:{' '}
-                    {product.countInStock > 0 ? 'In Stock' : 'Out of Stock'}
+                    {product.count_in_stock > 0 ? 'In Stock' : 'Out of Stock'}
                   </Typography>
-                  {product.countInStock > 0 && (
+                  {product.count_in_stock > 0 && (
                     <Box display="flex" alignItems="center" mt={2}>
                       <Typography>Qty:</Typography>
                       <FormControl fullWidth sx={{ ml: 2 }}>
@@ -160,11 +164,13 @@ const ProductScreen = () => {
                           value={qty}
                           onChange={(e) => setQty(e.target.value)}
                         >
-                          {[...Array(product.countInStock).keys()].map((x) => (
-                            <MenuItem key={x + 1} value={x + 1}>
-                              {x + 1}
-                            </MenuItem>
-                          ))}
+                          {[...Array(product.count_in_stock).keys()].map(
+                            (x) => (
+                              <MenuItem key={x + 1} value={x + 1}>
+                                {x + 1}
+                              </MenuItem>
+                            ),
+                          )}
                         </Select>
                       </FormControl>
                     </Box>
@@ -174,7 +180,7 @@ const ProductScreen = () => {
                     sx={{ mt: 2 }}
                     variant="contained"
                     color="primary"
-                    disabled={product.countInStock === 0}
+                    disabled={product.count_in_stock === 0}
                     onClick={addToCartHandler}
                   >
                     Add to Cart
@@ -193,7 +199,7 @@ const ProductScreen = () => {
                 ) : (
                   <List>
                     {product.reviews.map((review) => (
-                      <ListItem key={review._id} sx={{ mb: 2 }}>
+                      <ListItem key={review.id} sx={{ mb: 2 }}>
                         <ListItemText
                           primary={
                             <>
@@ -212,6 +218,7 @@ const ProductScreen = () => {
               </motion.div>
             </Grid>
 
+            {/* add review */}
             <Grid item xs={12}>
               <motion.div variants={itemVariants}>
                 <Typography variant="h5">Write a Review</Typography>
