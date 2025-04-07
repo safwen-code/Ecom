@@ -103,31 +103,31 @@ export const editproduct = (formData) => async (dispatch, getState) => {
 
 //delete prd
 export const deleteproduct = (id) => async (dispatch, getState) => {
-  console.log('from prd act', id)
-  // try {
-  //   dispatch({
-  //     type: DELETE_PRODUCT_REQUEST,
-  //   })
-  //   const {
-  //     cltLogin: { userInfo },
-  //   } = getState()
-  //   const config = {
-  //     headers: {
-  //       'Content-Type': 'multipart/form-data',
-  //       Authorization: `Bearer ${userInfo.token}`,
-  //     },
-  //   }
-  //   const { data } = await axios.put(`/api/products/DELETE/${id}`, config)
-  //   dispatch({ type: DELETE_PRODUCT_SUCCESS })
-  // } catch (error) {
-  //   dispatch({
-  //     type: DELETE_PRODUCT_FAIL,
-  //     payload:
-  //       error.response && error.response.data.message
-  //         ? error.response.data.message
-  //         : error.message,
-  //   })
-  // }
+  // console.log('from prd act', id)
+  try {
+    dispatch({
+      type: DELETE_PRODUCT_REQUEST,
+    })
+    const {
+      cltLogin: { userInfo },
+    } = getState()
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+    const { data } = await axios.delete(`/api/products/delete/${id}`, config)
+    dispatch({ type: DELETE_PRODUCT_SUCCESS, payload: data })
+  } catch (error) {
+    dispatch({
+      type: DELETE_PRODUCT_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
 }
 
 //prd by id
