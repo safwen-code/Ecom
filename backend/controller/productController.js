@@ -34,11 +34,12 @@ const addProduct = asynchandler(async (req, res) => {
       price,
       countInStock,
       numReviews,
+      rating,
     } = req.body
     console.log(req.body)
 
     // Validate required fields
-    if (!name || !price || !imagePath || !category || !description) {
+    if (!name || !price || !imagePath || !category || !description || !rating) {
       return res
         .status(400)
         .json({ message: 'Missing required fields in the request body' })
@@ -50,17 +51,18 @@ const addProduct = asynchandler(async (req, res) => {
       user_id,
       imagePath,
       category,
-      countInStock || 0, // Default to 0 if not provided
+      countInStock || 0,
       numReviews || 0, // Default to 0 if not provided
       price,
       description,
+      rating,
     ]
 
     // SQL query
     const query = `
       INSERT INTO "products" 
-      (name, user_id, image, category, count_in_stock, num_reviews, price, description) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+      (name, user_id, image, category, count_in_stock, num_reviews, price, description , rating) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
       RETURNING *;
     `
 
@@ -107,13 +109,37 @@ const allProducts = asynchandler(async (req, res) => {
 const getProduct = asynchandler(async (req, res) => {
   try {
     let id = req.params.id
-    const query = `SELECT * FROM "products" WHERE id = $1`
+
+    // First query to get product details
+    const queryProduct = `SELECT * FROM "products" WHERE id = $1`
     const vls = [id]
-    const result = await pool.query(query, vls)
-    res.json(result.rows)
+    const result = await pool.query(queryProduct, vls)
+
+    // If product found
+    if (result.rows[0]) {
+      // Second query to get reviews for the product
+      const queryReviews = `
+      SELECT r.name, r.comment, r.rating
+      FROM public.products p
+      JOIN public.reviews r ON p.id = r.product_id
+      WHERE p.id = $1;
+    `
+      const resultReviews = await pool.query(queryReviews, vls)
+
+      // Merge the product data with reviews data
+      const productWithReviews = {
+        ...result.rows[0], // product data
+        reviews: resultReviews.rows, // add reviews data
+      }
+
+      // Send merged data as the response
+      res.json(productWithReviews)
+    } else {
+      res.status(404).json({ message: 'Product not found' })
+    }
   } catch (error) {
     console.log(error)
-    res.status(500).json('server error')
+    res.status(500).json('Server error')
   }
 })
 
@@ -198,11 +224,10 @@ const deleteProduct = asynchandler(async (req, res) => {
     if (result.rowCount === 0) {
       res.status(404).json('problem in delete thing')
     } else {
-      res.status(200).json('product deleted')
-
       if (result.rows[0].image && fs.existsSync(result.rows[0].image)) {
         fs.unlinkSync(result.rows[0].image)
       }
+      res.status(200).json('product deleted')
     }
   } catch (error) {
     console.error(error)
