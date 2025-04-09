@@ -26,7 +26,7 @@ import { motion } from 'framer-motion'
 import Loader from '../layout/Loader'
 import Message from '../layout/Message'
 import { useDispatch, useSelector } from 'react-redux'
-import { displayProductby } from '../Actions/prdActions'
+import { addReview, displayProductby } from '../Actions/prdActions'
 
 const ProductScreen = () => {
   const dispatch = useDispatch()
@@ -37,11 +37,14 @@ const ProductScreen = () => {
   const [wishlist, setWishlist] = useState(false)
 
   let { id } = useParams()
+
+  const addReviewReducer = useSelector((state) => state.addReviewReducer)
+  const { success: successReview } = addReviewReducer
   useEffect(() => {
     if (id) {
       dispatch(displayProductby(id))
     }
-  }, [id, dispatch])
+  }, [id, dispatch, successReview])
 
   const productID = useSelector((state) => state.productID)
   const { loading, error, product } = productID
@@ -58,7 +61,11 @@ const ProductScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault()
-    console.log('Review submitted:', { rating, comment })
+
+    dispatch(addReview({ id, rating, comment }))
+    setRating(0)
+    setComment('')
+    // console.log('Review submitted:', { rating, comment })
   }
 
   const containerVariants = {
