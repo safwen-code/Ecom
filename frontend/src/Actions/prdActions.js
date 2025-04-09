@@ -11,13 +11,19 @@ import {
   DELETE_PRODUCT_FAIL,
   DELETE_PRODUCT_SUCCESS,
   DELETE_PRODUCT_REQUEST,
+  PRODUCT_DETAILS_REQUEST,
+  PRODUCT_DETAILS_SUCCESS,
+  PRODUCT_DETAILS_FAIL,
+  Add_REVIEW_FAIL,
+  Add_REVIEW_SUCCESS,
+  Add_REVIEW_REQUEST,
 } from '../Constants/prdConstants'
 import axios from 'axios'
-//all prd
 
+//all prd
 export const diplayProducts = () => async (dispatch) => {
-  dispatch({ type: PRODUCT_LIST_REQUEST })
   try {
+    dispatch({ type: PRODUCT_LIST_REQUEST })
     const { data } = await axios.get('/api/products/allProducts')
     console.log(data)
     dispatch({
@@ -133,17 +139,56 @@ export const deleteproduct = (id) => async (dispatch, getState) => {
 //prd by id
 export const displayProductby = (id) => async (dispatch) => {
   console.log(id)
-  // try {
-  //   dispatch({ type: PRODUCT_DETAILS_REQUEST })
-  //   const prd = products.find((el) => el._id === id)
+  try {
+    dispatch({ type: PRODUCT_DETAILS_REQUEST })
+    const { data } = await axios.get(`/api/products/${id}`)
+    console.log(data)
+    dispatch({
+      type: PRODUCT_DETAILS_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
 
-  //   if (prd) {
-  //     dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: prd })
-  //   }
-  // } catch (error) {
-  //   dispatch({
-  //     type: PRODUCT_DETAILS_FAIL,
-  //     payload: 'no data',
-  //   })
-  // }
+// add reviwe in product
+//take id of prd
+export const addReview = ({ id, rating, comment }) => async (
+  dispatch,
+  getState,
+) => {
+  // console.log('prd', id, rating, comment)
+  try {
+    const {
+      cltLogin: { userInfo },
+    } = getState()
+    dispatch({ type: Add_REVIEW_REQUEST })
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+    const { data } = await axios.post(
+      `/api/products/${id}/review`,
+      { rating, comment },
+      config,
+    )
+    dispatch({ type: Add_REVIEW_SUCCESS, payload: data })
+  } catch (error) {
+    dispatch({
+      type: Add_REVIEW_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
 }
