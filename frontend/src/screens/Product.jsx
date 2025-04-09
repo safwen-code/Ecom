@@ -50,7 +50,7 @@ const Product = ({ product }) => {
             }}
           >
             <Link
-              to={`/product/${product._id}`}
+              to={`/product/${product.id}`}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
               <motion.div
@@ -82,7 +82,7 @@ const Product = ({ product }) => {
               }}
             >
               <Link
-                to={`/product/${product._id}`}
+                to={`/product/${product.id}`}
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 <Typography
