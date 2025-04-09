@@ -15,6 +15,9 @@ import {
   DELETE_PRODUCT_REQUEST,
   DELETE_PRODUCT_SUCCESS,
   DELETE_PRODUCT_FAIL,
+  Add_REVIEW_REQUEST,
+  Add_REVIEW_SUCCESS,
+  Add_REVIEW_FAIL,
 } from '../Constants/prdConstants'
 
 export const prdListReducer = (state = { products: [] }, action) => {
@@ -86,6 +89,19 @@ export const deleteProductReducer = (state = {}, action) => {
       return { loading: false, success: true }
     case DELETE_PRODUCT_FAIL:
       return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+export const addReviewReducer = (state = { review: {} }, action) => {
+  switch (action.type) {
+    case Add_REVIEW_REQUEST:
+      return { ...state, loading: false }
+    case Add_REVIEW_SUCCESS:
+      return { ...state, loading: false, review: action.payload, success: true }
+    case Add_REVIEW_FAIL:
+      return { ...state, loading: false, error: action.payload }
     default:
       return state
   }
