@@ -138,7 +138,7 @@ const ProductScreen = () => {
                   <Box display="flex" alignItems="center" mt={2}>
                     <Rating
                       name="read-only"
-                      value={product.rating}
+                      value={Number(product.rating)}
                       readOnly
                       precision={0.5}
                     />
