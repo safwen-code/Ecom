@@ -4,23 +4,23 @@ import {
   CART_SAVE_PAYMENT_METHOD,
   CART_SAVE_SHIPPING_ADDRESS,
 } from '../Constants/cartConstants'
-import { products } from '../utils/data.js'
-
+import axios from 'axios'
 export const AddToCart = (id, qty) => async (dispatch, getState) => {
   //get prd
-  const product = products.find((prd) => prd._id === id)
-
-  dispatch({
-    type: CART_ADD_ITEM,
-    payload: {
-      _id: product._id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      countInStock: product.countInStock,
-      qty,
-    },
-  })
+  const { data } = await axios.get(`/api/products/${id}`)
+  if (data) {
+    dispatch({
+      type: CART_ADD_ITEM,
+      payload: {
+        id: data.id,
+        name: data.name,
+        price: data.price,
+        image: data.image,
+        countInStock: data.countInStock,
+        qty,
+      },
+    })
+  }
   localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
 }
 
