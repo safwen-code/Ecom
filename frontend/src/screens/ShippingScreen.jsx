@@ -10,16 +10,22 @@ const ShippingScreen = () => {
   const cart = useSelector((state) => state.cart)
   const { shippingAddress } = cart
 
-  const [address, setAddress] = useState('')
-  const [city, setCity] = useState('')
-  const [postalCode, setPostalCode] = useState('')
-  const [country, setCountry] = useState('')
+  const [address, setAddress] = useState(
+    shippingAddress && shippingAddress.address,
+  )
+  const [city, setCity] = useState(shippingAddress && shippingAddress.city)
+  const [postalCode, setPostalCode] = useState(
+    shippingAddress && shippingAddress.postalCode,
+  )
+  const [country, setCountry] = useState(
+    shippingAddress && shippingAddress.country,
+  )
   const navigate = useNavigate()
   const dispacth = useDispatch()
   const submitHandler = (e) => {
     e.preventDefault()
     // save shipping info logic here
-    // dispacth(addShippingAdress({ address, city, postalCode, country }))
+    dispacth(addShippingAdress({ address, city, postalCode, country }))
     navigate('/payment')
   }
 
